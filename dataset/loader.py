@@ -158,7 +158,7 @@ def load_data(params):
     data['index2word'] = index2word
     data['word2index'] = word2index
     data['mono'] = load_mono_data(params, word2index)
-    data['para'] = load_parallel_data(params, word2index)
+    # data['para'] = load_parallel_data(params, word2index)
 
     return data
 

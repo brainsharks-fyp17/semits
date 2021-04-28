@@ -101,6 +101,6 @@ def generate_rules(path, dic_path):
 
 
 if __name__ == '__main__':
-    generate_rules('../data/mono/new_comp.txt', 'comp2simp.pkl')
-    # read_ppdb("../data/SimplePPDB", "../data/SimplePPDBpp")
+    # generate_rules('../data/mono/new_comp.txt', 'comp2simp.pkl')
+    read_ppdb("../data/SimplePPDB", "../data/SimplePPDBpp")
 
