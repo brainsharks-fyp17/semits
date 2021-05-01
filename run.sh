@@ -107,7 +107,7 @@ python -u main.py \
 --pretrain_autoencoder 200000 \
 --lr ${LR} \
 --use_multi_process 1 \
---otf_num_processes 2 \
+--otf_num_processes 0 \
 --otf_sync_params_every 300 \
 --us_pretrain_embedding 1 \
 --embedding_path ${EMBEDDING_PATH} \
