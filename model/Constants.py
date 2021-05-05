@@ -23,8 +23,8 @@ test_path = './data/google/formal.dev'
 
 trained_path= './trained_model'
 
-# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-device = torch.device("cuda")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+# device = torch.device("cuda")
 
 max_oov = 15
 Pointer=True
