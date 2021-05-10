@@ -1,3 +1,9 @@
 /.idea
 dataset/comp2simp.pkl
 dataset/simp2comp.pkl
+data/SimplePPDB
+data/SimplePPDBpp
+data/nonpara/wiki-split.en.lower
+data/nonpara/wiki-split.sen.lower
+data/nonpara/simp_train.txt
+data/nonpara/comp_train.txt
