@@ -92,13 +92,14 @@ class Trainer(MultiprocessingEventLoop):
 
     def _async_otf_init(self, rank, device_id, params, gpu_id):
         # build model on subprocess
-
+        cpu_device = 'cpu'
         from copy import deepcopy
         params = deepcopy(params)
         self.params = params
         self.data = None  # do not load data in the CPU threads
         self.iterators = {}
-        self.model = Transformer(params).to(torch.device('cuda:' + str(gpu_id)))
+        # self.model = Transformer(params).to(torch.device('cuda:' + str(gpu_id)))
+        self.model = Transformer(params).to(torch.device(cpu_device))
         self.type_dict = {'comp': 0, 'simp': 1}
 
     def otf_sync_params(self):
