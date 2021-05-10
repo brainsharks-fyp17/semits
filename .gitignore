@@ -1,1 +1,3 @@
 /.idea
+dataset/comp2simp.pkl
+dataset/simp2comp.pkl
