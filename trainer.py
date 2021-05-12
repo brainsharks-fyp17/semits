@@ -96,7 +96,7 @@ class Trainer(MultiprocessingEventLoop):
         from copy import deepcopy
         params = deepcopy(params)
         self.params = params
-        self.data = None  # do not load data in the CPU threads
+        self.data = None  # do not load data in the CPU threads todo check
         self.iterators = {}
         # self.model = Transformer(params).to(torch.device('cuda:' + str(gpu_id)))
         self.model = Transformer(params).to(torch.device(cpu_device))
@@ -437,10 +437,11 @@ class Trainer(MultiprocessingEventLoop):
         return (rank, results)
 
     def iter(self):
+        iter_show = 2  # 500 earlier
         self.n_iter += 1
         self.n_sentences += 4 * self.params.batch_size
 
-        if self.n_iter % 500 == 0 and self.params.rl_finetune:
+        if self.n_iter % iter_show == 0 and self.params.rl_finetune:
             write_reward_simp = sum(self.rewards_simp) / len(self.rewards_simp)
             self.rewards_simp.clear()
 
@@ -451,8 +452,8 @@ class Trainer(MultiprocessingEventLoop):
         self.print_stats()
 
     def print_stats(self, pretrain=False):
-
-        if self.n_iter % 500 == 0 or pretrain:
+        iter_show = 2  # 500 earlier
+        if self.n_iter % iter_show == 0 or pretrain:
             simp_loss = 0
             comp_loss = 0
             for key in self.stat.keys():
