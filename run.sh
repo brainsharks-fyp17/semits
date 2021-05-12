@@ -100,11 +100,11 @@ python -u main.py \
 --word_dropout ${WORD_DROPOUT} \
 --word_replace ${WORD_REPLACE} \
 --frc_path ${FRC_PATH} \
---batch_size 16 \
---epoch_size 150000 \
+--batch_size 4 \
+--epoch_size 1500 \
 --freeze_enc_emb 0 \
 --freeze_dec_emb 0 \
---pretrain_autoencoder 200000 \
+--pretrain_autoencoder 200 \
 --lr ${LR} \
 --use_multi_process 1 \
 --otf_num_processes 2 \
