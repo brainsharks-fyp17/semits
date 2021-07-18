@@ -150,6 +150,7 @@ class Evaluator(object):
 
     def lm_eval(self, type):
         if self.lm is None:
+            logger.info("No LM found")
             return
 
         self.lm.eval()
@@ -174,6 +175,7 @@ class Evaluator(object):
 
     def auto_encoder_eval(self, type):
         if self.model is None:
+            logger.info("No model found")
             return
 
         self.model.eval()
@@ -207,6 +209,7 @@ class Evaluator(object):
 
     def enc_dec_eval(self, src_type, tgt_type, use_pointer=False, mode='dev'):
         if self.model is None:
+            logger.info("No model found")
             return
 
         self.model.eval()
