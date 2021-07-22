@@ -29,14 +29,14 @@ def load_mono_data(params, vocab):
             if 'comp' in name:
                 logger.info("Loading data from %s ..." % params.comp_frequent_list)
                 frequent_list = load_frequent_list(params.comp_frequent_list)
-                logger.info("Loading data from %s ..." % params.comp_ppdb_rules)
-                ppdb_rules = load_ppdb_rules(params.comp_ppdb_rules)
+                # logger.info("Loading data from %s ..." % params.comp_ppdb_rules)
+                # ppdb_rules = load_ppdb_rules(params.comp_ppdb_rules)
                 data_mode = 'comp'
 
             elif 'simp' in name:
                 frequent_list = load_frequent_list(params.simp_frequent_list)
-                logger.info("Loading data from %s ..." % params.simp_ppdb_rules)
-                ppdb_rules = load_ppdb_rules(params.simp_ppdb_rules)
+                # logger.info("Loading data from %s ..." % params.simp_ppdb_rules)
+                # ppdb_rules = load_ppdb_rules(params.simp_ppdb_rules)
                 data_mode = 'simp'
 
             else:
@@ -49,7 +49,7 @@ def load_mono_data(params, vocab):
                     word2index=vocab,
                     max_len=params.len_max_seq,
                     frequent_word_list=frequent_list,
-                    ppdb_rules=ppdb_rules,
+                    # ppdb_rules=ppdb_rules,
                     data_mode=data_mode,
                     train_mode='autoencoder'
                 ),
@@ -65,7 +65,7 @@ def load_mono_data(params, vocab):
                     word2index=vocab,
                     max_len=params.len_max_seq,
                     frequent_word_list=frequent_list,
-                    ppdb_rules=ppdb_rules,
+                    # ppdb_rules=ppdb_rules,
                     data_mode=data_mode,
                     train_mode='otf'
                 ),
@@ -75,7 +75,7 @@ def load_mono_data(params, vocab):
             )
             mono_data['encdec'][name] = loader
             mono_data['otf'][name] = otf_loader
-            
+    logger.info("Loaded mono data:", mono_data)
     return mono_data
 
 
@@ -84,58 +84,58 @@ def load_frequent_list(path):
     with codecs.open(path) as f:
         for w in f.readlines():
             if w not in frequent_word_list:
-                frequent_word_list.add(w)
+                frequent_word_list.add(w.strip())
 
     return frequent_word_list
 
 
-def load_ppdb_rules(path):
-    rule_files = codecs.open(path, mode='rb')
-    ppdb_rules = pickle.load(rule_files)
+# def load_ppdb_rules(path):
+#     rule_files = codecs.open(path, mode='rb')
+#     ppdb_rules = pickle.load(rule_files)
+#
+#     return ppdb_rules
 
-    return ppdb_rules
 
-
-def load_parallel_data(params, vocab):
-    para_data_list = ['dev', 'test']
-    para_data_path = []
-    
-    para_data = {}
-    para_data_path.append(params.para_dev_path)
-    para_data_path.append(params.para_test_path)
-
-    if params.supervised_rate > 0:
-        para_data_list.append('train')
-        para_data_path.append(params.para_train_path)
-
-    tokenizer = BertTokenizer(params.vocab_path)
-    
-    for path, name in zip(para_data_path, para_data_list):
-        assert os.path.isfile(path)
-        logger.info("Loading data from %s ..." % path)
-        with codecs.open(path) as f:
-            read_filev = f.readlines()
-            comp_sents = []
-            simp_sents = []
-            for i in read_filev:
-                line = i.strip().split('|')
-                comp_sents.append(tokenizer.tokenize(line[0]))
-                simp_sents.append(tokenizer.tokenize(line[1]))
-
-            if name == 'train':
-                batch_size = params.batch_size
-            else:
-                batch_size = 1
-
-            loader = DataLoader(
-                dataset=ParallelData(simp_sent=simp_sents, complex_sent=comp_sents, word2index=vocab, max_len=params.len_max_seq),
-                batch_size=batch_size,
-                shuffle=False,
-                collate_fn=paired_collate_fn,
-            )
-            para_data[name] = loader
-
-    return para_data
+# def load_parallel_data(params, vocab):
+#     para_data_list = ['dev', 'test']
+#     para_data_path = []
+#
+#     para_data = {}
+#     para_data_path.append(params.para_dev_path)
+#     para_data_path.append(params.para_test_path)
+#
+#     if params.supervised_rate > 0:
+#         para_data_list.append('train')
+#         para_data_path.append(params.para_train_path)
+#
+#     tokenizer = BertTokenizer(params.vocab_path)
+#
+#     for path, name in zip(para_data_path, para_data_list):
+#         assert os.path.isfile(path)
+#         logger.info("Loading data from %s ..." % path)
+#         with codecs.open(path) as f:
+#             read_filev = f.readlines()
+#             comp_sents = []
+#             simp_sents = []
+#             for i in read_filev:
+#                 line = i.strip().split('|')
+#                 comp_sents.append(tokenizer.tokenize(line[0]))
+#                 simp_sents.append(tokenizer.tokenize(line[1]))
+#
+#             if name == 'train':
+#                 batch_size = params.batch_size
+#             else:
+#                 batch_size = 1
+#
+#             loader = DataLoader(
+#                 dataset=ParallelData(simp_sent=simp_sents, complex_sent=comp_sents, word2index=vocab, max_len=params.len_max_seq),
+#                 batch_size=batch_size,
+#                 shuffle=False,
+#                 collate_fn=paired_collate_fn,
+#             )
+#             para_data[name] = loader
+#
+#     return para_data
 
 
 def load_vocab(params):
