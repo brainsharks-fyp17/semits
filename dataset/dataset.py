@@ -159,33 +159,33 @@ class MonoLingualData(data.Dataset):
         else:
             mono_seq = [Constants.CBOS] + mono_seq + [Constants.EOS]
 
-        # if self.train_mode == 'autoencoder':
-        #     if item in self.ppdb_rules:
-        #         rules = self.ppdb_rules[item]
-        #         corupt_seq = self.word_replace(corupt_seq, rules)
-        #     else:
-        #         corupt_seq = corupt_seq.split()
-        #     if self.params.shuffle_mode == 'unigram':
-        #         word_ids = np.arange(len(corupt_seq), dtype=int)
-        #     elif self.params.shuffle_mode == 'bigram':
-        #         word_ids = np.array([int(num/2) for num in range(len(corupt_seq))])
-        #     else:
-        #         word_ids = self.word_ids[item]
-        #     assert len(corupt_seq) == len(word_ids)
-        #
-        #     corupt_seq = self.add_noise(seq=corupt_seq, word_ids=word_ids)
-        #     corupt_seq = self.tokenizer.tokenize(corupt_seq)
-        #
-        #     corupt_seq = [self.get_index(word) for word in corupt_seq]
-        #     if len(corupt_seq) > self.max_len - 2:
-        #         corupt_seq = corupt_seq[:self.max_len - 2]
-        #
-        #     if self.data_mode == 'simp':
-        #         corupt_seq = [Constants.SBOS] + corupt_seq + [Constants.EOS]
-        #     else:
-        #         corupt_seq = [Constants.CBOS] + corupt_seq + [Constants.EOS]
-        #
-        #     return corupt_seq, mono_seq
+        if self.train_mode == 'autoencoder':
+            # if item in self.ppdb_rules:
+            #     rules = self.ppdb_rules[item]
+            #     corupt_seq = self.word_replace(corupt_seq, rules)
+            # else:
+            corupt_seq = corupt_seq.split()
+            if self.params.shuffle_mode == 'unigram':
+                word_ids = np.arange(len(corupt_seq), dtype=int)
+            elif self.params.shuffle_mode == 'bigram':
+                word_ids = np.array([int(num/2) for num in range(len(corupt_seq))])
+            else:
+                word_ids = self.word_ids[item]
+            assert len(corupt_seq) == len(word_ids)
+
+            corupt_seq = self.add_noise(seq=corupt_seq, word_ids=word_ids)
+            corupt_seq = self.tokenizer.tokenize(corupt_seq)
+
+            corupt_seq = [self.get_index(word) for word in corupt_seq]
+            if len(corupt_seq) > self.max_len - 2:
+                corupt_seq = corupt_seq[:self.max_len - 2]
+
+            if self.data_mode == 'simp':
+                corupt_seq = [Constants.SBOS] + corupt_seq + [Constants.EOS]
+            else:
+                corupt_seq = [Constants.CBOS] + corupt_seq + [Constants.EOS]
+
+            return corupt_seq, mono_seq
 
         return mono_seq
 
