@@ -1,10 +1,12 @@
-import torch
-import numpy as np
-import torch.utils.data as data
-from model import Constants
-from dataset.tokenization import BertTokenizer
-import re
 import codecs
+import re
+
+import numpy as np
+import torch
+import torch.utils.data as data
+
+from dataset.tokenization import BertTokenizer
+from model import Constants
 
 
 def paired_collate_fn(insts):
@@ -15,7 +17,7 @@ def paired_collate_fn(insts):
 
 
 def collate_fn(insts):
-    ''' Pad the instance to the max seq length in batch '''
+    """ Pad the instance to the max seq length in batch """
     max_len = max(len(inst) for inst in insts)
     batch_seq = np.array([
         inst + [Constants.PAD] * (max_len - len(inst))
@@ -52,7 +54,6 @@ class MonoLingualData(data.Dataset):
         stop_set = set(k)
         light_set = set(f)
         return stop_set, light_set
-        
 
     def get_index(self, word):
         if word in self.word2index:
@@ -61,7 +62,7 @@ class MonoLingualData(data.Dataset):
             return Constants.UNK
 
     def add_noise(self, seq, word_ids):
-        if self.data_mode =='simp':
+        if self.data_mode == 'simp':
             if self.params.additive:
                 seq, word_ids = self.word_additive(seq, word_ids)
                 seq = self.word_shuffle(seq, word_ids, word_ids[-1], flag=1)
@@ -98,7 +99,7 @@ class MonoLingualData(data.Dataset):
                 except:
                     print("error occurred, the key is ", key, alternative_words)
                     pass
-        
+
         return seq.split()
 
     def word_additive(self, seq, word_ids):
@@ -114,8 +115,8 @@ class MonoLingualData(data.Dataset):
         min = int((additive_word_ids[-1] + 1) * 0.3)
         max = int((additive_word_ids[-1] + 1) * 0.6)
 
-        additive_len = np.random.randint(min, max+1)
-        sampled_ids = np.random.choice(additive_word_ids[-1]+1, additive_len, replace=False)
+        additive_len = np.random.randint(min, max + 1)
+        sampled_ids = np.random.choice(additive_word_ids[-1] + 1, additive_len, replace=False)
 
         sampled_seq = [additive_seq[i] for i in range(len(additive_seq)) if additive_word_ids[i] in sampled_ids]
         ad_word_ids = [additive_word_ids[i] for i in range(len(additive_seq))
@@ -140,7 +141,7 @@ class MonoLingualData(data.Dataset):
         else:
             new_seq = [w for j, w in enumerate(seq) if (keep[j] or frequent_mask[j])]
         if len(new_seq) == 0:
-            new_seq.insert(1, seq[np.random.randint(1, len(seq)-1)])
+            new_seq.insert(1, seq[np.random.randint(1, len(seq) - 1)])
         return new_seq
 
     def __getitem__(self, item):
@@ -152,40 +153,40 @@ class MonoLingualData(data.Dataset):
         mono_seq = [self.get_index(word) for word in mono_seq]
         if len(mono_seq) > self.max_len - 2:
             mono_seq = mono_seq[:self.max_len - 2]
-        
+
         if self.data_mode == 'simp':
             mono_seq = [Constants.SBOS] + mono_seq + [Constants.EOS]
         else:
             mono_seq = [Constants.CBOS] + mono_seq + [Constants.EOS]
 
-        if self.train_mode == 'autoencoder':
-            if item in self.ppdb_rules:
-                rules = self.ppdb_rules[item]
-                corupt_seq = self.word_replace(corupt_seq, rules)
-            else:
-                corupt_seq = corupt_seq.split()
-            if self.params.shuffle_mode == 'unigram':
-                word_ids = np.arange(len(corupt_seq), dtype=int)
-            elif self.params.shuffle_mode == 'bigram':
-                word_ids = np.array([int(num/2) for num in range(len(corupt_seq))])
-            else:
-                word_ids = self.word_ids[item]
-            assert len(corupt_seq) == len(word_ids)
+        # if self.train_mode == 'autoencoder':
+        #     if item in self.ppdb_rules:
+        #         rules = self.ppdb_rules[item]
+        #         corupt_seq = self.word_replace(corupt_seq, rules)
+        #     else:
+        #         corupt_seq = corupt_seq.split()
+        #     if self.params.shuffle_mode == 'unigram':
+        #         word_ids = np.arange(len(corupt_seq), dtype=int)
+        #     elif self.params.shuffle_mode == 'bigram':
+        #         word_ids = np.array([int(num/2) for num in range(len(corupt_seq))])
+        #     else:
+        #         word_ids = self.word_ids[item]
+        #     assert len(corupt_seq) == len(word_ids)
+        #
+        #     corupt_seq = self.add_noise(seq=corupt_seq, word_ids=word_ids)
+        #     corupt_seq = self.tokenizer.tokenize(corupt_seq)
+        #
+        #     corupt_seq = [self.get_index(word) for word in corupt_seq]
+        #     if len(corupt_seq) > self.max_len - 2:
+        #         corupt_seq = corupt_seq[:self.max_len - 2]
+        #
+        #     if self.data_mode == 'simp':
+        #         corupt_seq = [Constants.SBOS] + corupt_seq + [Constants.EOS]
+        #     else:
+        #         corupt_seq = [Constants.CBOS] + corupt_seq + [Constants.EOS]
+        #
+        #     return corupt_seq, mono_seq
 
-            corupt_seq = self.add_noise(seq=corupt_seq, word_ids=word_ids)
-            corupt_seq = self.tokenizer.tokenize(corupt_seq)
-
-            corupt_seq = [self.get_index(word) for word in corupt_seq]
-            if len(corupt_seq) > self.max_len - 2:
-                corupt_seq = corupt_seq[:self.max_len - 2]
-
-            if self.data_mode == 'simp':
-                corupt_seq = [Constants.SBOS] + corupt_seq + [Constants.EOS]
-            else:
-                corupt_seq = [Constants.CBOS] + corupt_seq + [Constants.EOS]
-
-            return corupt_seq, mono_seq
-        
         return mono_seq
 
     def __len__(self):
@@ -223,7 +224,5 @@ class ParallelData(data.Dataset):
 
         return com_seq, sim_seq
 
-
     def __len__(self):
         return len(self.comp_sent)
-
