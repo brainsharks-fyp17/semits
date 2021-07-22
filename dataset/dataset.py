@@ -47,6 +47,7 @@ class MonoLingualData(data.Dataset):
     def load_stoplist(self):
         path = self.params.stoplist_path
         f = codecs.open(path).readlines()
+        f = [word.strip() for word in f]
         k = f + ['.', ',', ';', '\'', '`', '*', '?', '\\', '\\\\']
         stop_set = set(k)
         light_set = set(f)
@@ -95,7 +96,7 @@ class MonoLingualData(data.Dataset):
                 try:
                     seq = re.sub(key, alternative_words, seq, count=1)
                 except:
-                    # print("error occured, the key is ", key, alternative_words)
+                    print("error occurred, the key is ", key, alternative_words)
                     pass
         
         return seq.split()
@@ -222,7 +223,7 @@ class ParallelData(data.Dataset):
 
         return com_seq, sim_seq
 
-        
+
     def __len__(self):
         return len(self.comp_sent)
 
