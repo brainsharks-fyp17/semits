@@ -87,20 +87,20 @@ class MonoLingualData(data.Dataset):
         ret_seq = [seq[i] for i in index]
         return ret_seq
 
-    def word_replace(self, seq, rules):
-        for key, values in rules.items():
-            if key in seq and np.random.rand() <= self.params.word_replace and key not in self.stop_set:
-                index = np.random.randint(0, len(values))
-                alternative_words = values[index]
-                if alternative_words in ['.', ',', ';', '\'', '`', '*', '?', '\\', '\\\\']:
-                    continue
-                try:
-                    seq = re.sub(key, alternative_words, seq, count=1)
-                except:
-                    print("error occurred, the key is ", key, alternative_words)
-                    pass
-
-        return seq.split()
+    # def word_replace(self, seq, rules):
+    #     for key, values in rules.items():
+    #         if key in seq and np.random.rand() <= self.params.word_replace and key not in self.stop_set:
+    #             index = np.random.randint(0, len(values))
+    #             alternative_words = values[index]
+    #             if alternative_words in ['.', ',', ';', '\'', '`', '*', '?', '\\', '\\\\']:
+    #                 continue
+    #             try:
+    #                 seq = re.sub(key, alternative_words, seq, count=1)
+    #             except:
+    #                 print("error occurred, the key is ", key, alternative_words)
+    #                 pass
+    #
+    #     return seq.split()
 
     def word_additive(self, seq, word_ids):
         index = np.random.randint(0, self.__len__())
