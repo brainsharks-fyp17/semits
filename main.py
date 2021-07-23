@@ -207,7 +207,7 @@ def main(params):
         return
 
     logger.info("==================== Eval at AutoEncoder Only ====================")
-    scores = evaluator.eval_all(use_pointer=False)
+    # scores = evaluator.eval_all(use_pointer=False)
 
     trainer.start_back_translation()
     for ep in range(params.max_epoch):

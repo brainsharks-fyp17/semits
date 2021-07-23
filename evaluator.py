@@ -51,6 +51,7 @@ class Evaluator(object):
 
     def get_loader(self, loader_name, src_type, tgt_type, mode='dev'):
         if loader_name == 'encdec':
+            tgt_type = None
             if tgt_type is None:
                 data_loader = self.data['mono'][loader_name][src_type + '_dev']
             else:
