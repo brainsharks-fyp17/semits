@@ -15,17 +15,17 @@ SBOS_WORD = '[SCLS]'
 EOS_WORD = '[SEP]'
 
 vocab_path = './data/google/voca.list'
-pos_path = './pos.list'
+# pos_path = './pos.list'
+#
+# train_path = './data/google/formal.train'
+# valid_path = './data/google/formal.dev'
+# test_path = './data/google/formal.dev'
 
-train_path = './data/google/formal.train'
-valid_path = './data/google/formal.dev'
-test_path = './data/google/formal.dev'
-
-trained_path= './trained_model'
+# trained_path= './trained_model'
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-print(device)
+print("Using:", device)
 # device = torch.device("cuda")
 
 max_oov = 15
-Pointer=True
+Pointer = True

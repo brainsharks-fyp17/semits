@@ -19,20 +19,20 @@ COMP_TRAIN_PATH="${MONO_DIR}/comp_train.txt"
 COMP_DEV_PATH="${MONO_DIR}/comp_dev.txt"
 SUPERVISED_RATE=0
 
-#PARA_DIR="${DATA_DIR}/parallel"
-#DEV_DATASET="newsela"
-#PARA_DEV_PATH="${PARA_DIR}/${DEV_DATASET}/dev.txt"
-#PARA_TEST_PATH="${PARA_DIR}/${DEV_DATASET}/test.txt"
-#PARA_TRAIN_PATH="${PARA_DIR}/${DEV_DATASET}/train${SUPERVISED_RATE}.txt"
-#FRC_PATH="${RESOURCE_DIR}/enwiki_vocab_min200.txt"
+PARA_DIR="${DATA_DIR}/parallel"
+DEV_DATASET="newsela"
+PARA_DEV_PATH="${PARA_DIR}/${DEV_DATASET}/dev.txt"
+PARA_TEST_PATH="${PARA_DIR}/${DEV_DATASET}/test.txt"
+PARA_TRAIN_PATH="${PARA_DIR}/${DEV_DATASET}/train${SUPERVISED_RATE}.txt"
+FRC_PATH="${RESOURCE_DIR}/enwiki_vocab_min200.txt"
 
-#EMBEDDING_PATH="${RESOURCE_DIR}/embedding.pkl"
-#LM_PATH="${RESOURCE_DIR}/lang.pkl"
+EMBEDDING_PATH="${RESOURCE_DIR}/embedding.pkl"
+LM_PATH="${RESOURCE_DIR}/lang.pkl"
 
-#COMP_FREQUENT_LIST="${RESOURCE_DIR}/denoise/frequent_comp.list"
-#SIMP_FREQUENT_LIST="${RESOURCE_DIR}/denoise/frequent_simp.list"
-#COMP_PPDB_RULES="${RESOURCE_DIR}/denoise/comp_rules.pkl"
-#SIMP_PPDB_RULES="${RESOURCE_DIR}/denoise/simp_rules.pkl"
+COMP_FREQUENT_LIST="${RESOURCE_DIR}/denoise/frequent_comp.list"
+SIMP_FREQUENT_LIST="${RESOURCE_DIR}/denoise/frequent_simp.list"
+COMP_PPDB_RULES="${RESOURCE_DIR}/denoise/comp_rules.pkl"
+SIMP_PPDB_RULES="${RESOURCE_DIR}/denoise/simp_rules.pkl"
 STOP_LIST="${RESOURCE_DIR}/stop.list"
 
 VOCAB_PATH="${DATA_DIR}/vocab.list"
@@ -56,7 +56,7 @@ WORD_SHUFFLE=3
 SHUFFLE_MODE='bigram'
 WORD_DROPOUT=0.6
 DROP_TYPE='Two'
-#WORD_REPLACE=0.9
+WORD_REPLACE=0.9
 ADDITIVE=1
 RL_FINETUNE=0
 LR=0.00005
