@@ -7,6 +7,7 @@ from model.Modules import MultiHeadAttention, PositionwiseFeedForward
 import pickle
 import codecs
 from logging import getLogger
+import os
 
 logger = getLogger()
 
@@ -14,6 +15,7 @@ logger = getLogger()
 class Encoder(nn.Module):
     def __init__(self, args):
         super().__init__()
+        logger.info("Evaluator object created at pid:"+str(os.getpid()))
         self.dropout = args.dropout
         self.n_src_vocab = args.n_src_vocab
 
