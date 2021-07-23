@@ -192,6 +192,7 @@ def main(params):
     #scores = evaluator.eval_all(use_pointer=False)
 
     logger.info(" ====================== Pretraing Embedding... ====================")
+    logger.info("Pretraing Embedding at pid:"+str(os.getpid()))
 
     if params.pretrain_autoencoder > 0:
         for i in range(params.pretrain_autoencoder):
@@ -201,7 +202,7 @@ def main(params):
                 simp_loss, comp_loss = trainer.print_stats(pretrain=True)
                 # score = evaluator.eval_all(use_pointer=False)
                 
-        logger.info("saving model")
+        logger.info("saving model pid: "+str(os.getpid()))
         trainer.save_model(params.name)
         return
 

@@ -22,9 +22,11 @@ class Evaluator(object):
         self.index2word = data['index2word']
         self.ref_list = []
         self.output_list = []
+        logger.info("Evaluator object created at pid:"+str(os.getpid()))
 
     def get_loader(self, loader_name, src_type, tgt_type, mode='dev'):
         if loader_name == 'encdec':
+            # tgt_type = None
             if tgt_type is None:
                 data_loader = self.data['mono'][loader_name][src_type + '_dev']
             else:
@@ -71,6 +73,7 @@ class Evaluator(object):
 
     def auto_encoder_eval(self, type):
         if self.model is None:
+            logger.info("Error Model is none!:pid:"+str(os.getpid()))
             return
 
         self.model.eval()
@@ -104,6 +107,7 @@ class Evaluator(object):
 
     def enc_dec_eval(self, src_type, tgt_type, use_pointer=False, mode='dev'):
         if self.model is None:
+            logger.info("Error Model is none!:pid:"+str(os.getpid()))
             return
 
         self.model.eval()

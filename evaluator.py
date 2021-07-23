@@ -45,7 +45,7 @@ class Evaluator(object):
         self.index2word = data['index2word']
         self.params = params
         self.type_dict = {'comp': 0, 'simp': 1}
-        self.cmu_dict = cmudict.dict()
+        # self.cmu_dict = cmudict.dict()
         self.ref_list = []
         self.output_list = []
 

@@ -69,6 +69,7 @@ class Trainer(MultiprocessingEventLoop):
         self.rewards_simp = []
         self.rewards_comp = []
         # self.sts_model = STS_model(params)
+        logger.info("Trainer object created at pid:"+str(os.getpid()))
 
         self.stat = {
             'auto_encoder_simp_loss': [],

@@ -11,7 +11,9 @@ import signal
 import threading
 from torch import multiprocessing
 import uuid
+from logging import getLogger
 
+logger = getLogger()
 
 class MultiprocessingEventLoop(object):
     """Start a multiprocessing event loop."""
@@ -26,6 +28,7 @@ class MultiprocessingEventLoop(object):
 
         self._start_error_handler()
         self._start_multiprocessing()
+        logger.info("MultiprocessingEventLoop object created at pid:"+str(os.getpid()))
 
     def call_async(self, rank, action, result_type=None, fetch_all=False,
                    **kwargs):
