@@ -4,12 +4,12 @@ from torch.nn import functional as F
 import codecs
 import model.Constants as Constants
 from metrics.STAR import SARIsent
-from metrics.FKGL import fkgl_score
+# from metrics.FKGL import fkgl_score
 import metrics.SARI as sari
 from nltk.translate.meteor_score import single_meteor_score
 from logging import getLogger
 import numpy as np
-from nltk.corpus import cmudict
+# from nltk.corpus import cmudict
 from nltk.translate.bleu_score import corpus_bleu
 
 logger = getLogger()
