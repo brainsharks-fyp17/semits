@@ -20,7 +20,7 @@ COMP_DEV_PATH="${MONO_DIR}/comp_dev.txt"
 SUPERVISED_RATE=0
 
 PARA_DIR="${DATA_DIR}/parallel"
-DEV_DATASET="newsela"
+DEV_DATASET="si-cc"
 PARA_DEV_PATH="${PARA_DIR}/${DEV_DATASET}/dev.txt"
 PARA_TEST_PATH="${PARA_DIR}/${DEV_DATASET}/test.txt"
 PARA_TRAIN_PATH="${PARA_DIR}/${DEV_DATASET}/train${SUPERVISED_RATE}.txt"
@@ -100,11 +100,11 @@ python -u main.py \
 --word_dropout ${WORD_DROPOUT} \
 --word_replace ${WORD_REPLACE} \
 --frc_path ${FRC_PATH} \
---batch_size 4 \
+--batch_size 8 \
 --epoch_size 1500 \
 --freeze_enc_emb 0 \
 --freeze_dec_emb 0 \
---pretrain_autoencoder 200 \
+--pretrain_autoencoder 20 \
 --lr ${LR} \
 --use_multi_process 1 \
 --otf_num_processes 2 \
