@@ -25,8 +25,8 @@ class Encoder(nn.Module):
         self.embedding = nn.Embedding(
             self.n_src_vocab, d_word_vec, padding_idx=Constants.PAD)
 
-        if args.us_pretrain_embedding:
-            self.init_embedding(args)
+        # if args.us_pretrain_embedding:
+        #     self.init_embedding(args)
 
         self.position_enc = nn.Embedding.from_pretrained(
             get_sinusoid_encoding_table(n_position, d_word_vec, padding_idx=0),
@@ -47,13 +47,13 @@ class Encoder(nn.Module):
             else:
                 self.layer_stack[k].append(EncoderLayer(args=args))
 
-    def init_embedding(self, args):
-        logger.info("init embeddings with pretrained vector")
-        pre_train_path = args.embedding_path
-        weight_file = codecs.open(pre_train_path, mode='rb')
-        emb_weight = pickle.load(weight_file)
-
-        self.embedding = nn.Embedding.from_pretrained(emb_weight, freeze=True)
+    # def init_embedding(self, args):
+    #     logger.info("init embeddings with pretrained vector")
+    #     pre_train_path = args.embedding_path
+    #     weight_file = codecs.open(pre_train_path, mode='rb')
+    #     emb_weight = pickle.load(weight_file)
+    #
+    #     self.embedding = nn.Embedding.from_pretrained(emb_weight, freeze=True)
 
     def forward(self, src_seq, src_pos, input_id, return_attns=False):
         enc_slf_attn_list = []
@@ -97,8 +97,8 @@ class Decoder(nn.Module):
         self.embedding = nn.Embedding(
             self.n_tgt_vocab, d_word_vec, padding_idx=Constants.PAD)
 
-        if args.us_pretrain_embedding:
-            self.init_embedding(args)        
+        # if args.us_pretrain_embedding:
+        #     self.init_embedding(args)
 
         if self.share_encdec_emb:
             logger.info("Sharing encoder and decoder input embeddings")
@@ -123,13 +123,13 @@ class Decoder(nn.Module):
             else:
                 self.layer_stack[k].append(DecoderLayer(args=args))
 
-    def init_embedding(self, args):
-        logger.info("init embeddings with pretrained vector")
-        pre_train_path = args.embedding_path
-        weight_file = codecs.open(pre_train_path, mode='rb')
-        emb_weight = pickle.load(weight_file)
-
-        self.embedding = nn.Embedding.from_pretrained(emb_weight, freeze=False)
+    # def init_embedding(self, args):
+    #     logger.info("init embeddings with pretrained vector")
+    #     pre_train_path = args.embedding_path
+    #     weight_file = codecs.open(pre_train_path, mode='rb')
+    #     emb_weight = pickle.load(weight_file)
+    #
+    #     self.embedding = nn.Embedding.from_pretrained(emb_weight, freeze=False)
 
     def forward(self, tgt_seq, tgt_pos, src_seq, enc_output, input_id, return_attns=False):
 
