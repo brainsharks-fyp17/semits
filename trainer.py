@@ -57,7 +57,7 @@ class Trainer(MultiprocessingEventLoop):
         self.n_sentences = 0
         self.n_iter = 0
         self.gen_time = 0
-        self.start_time = 0
+        self.start_time = time.time()
         self.stopping_criterion = params.stopping_criterion
         self.best_stopping_criterion = -1
         self.relative_best = -1
@@ -69,7 +69,7 @@ class Trainer(MultiprocessingEventLoop):
         self.rewards_simp = []
         self.rewards_comp = []
         # self.sts_model = STS_model(params)
-        logger.info("Trainer object created at pid:"+str(os.getpid()))
+        logger.info("Trainer object created at pid:" + str(os.getpid()))
 
         self.stat = {
             'auto_encoder_simp_loss': [],
@@ -89,7 +89,7 @@ class Trainer(MultiprocessingEventLoop):
 
         # initialize subprocesses
         for rank in range(self.num_replicas):
-            self.call_async(rank, '_async_otf_init', params=self.params, gpu_id=rank+1)
+            self.call_async(rank, '_async_otf_init', params=self.params, gpu_id=rank + 1)
 
     def _async_otf_init(self, rank, device_id, params, gpu_id):
         # build model on subprocess
@@ -191,7 +191,7 @@ class Trainer(MultiprocessingEventLoop):
             loss = F.cross_entropy(pred, gold, ignore_index=Constants.PAD, reduction='sum') / batch_size * xe
 
         if src_type == tgt_type:
-            self.stat['auto_encoder_'+ src_type + '_loss'].append(loss.item())
+            self.stat['auto_encoder_' + src_type + '_loss'].append(loss.item())
         else:
             self.stat[src_type + '_' + tgt_type + '_loss'].append(loss.item())
 
@@ -312,7 +312,7 @@ class Trainer(MultiprocessingEventLoop):
         """
         params = self.params
         src_type, tgt_type, data = batch['src_type'], batch['tgt_type'], batch['data']
-        src_seq, tgt_seq, src_pos, tgt_pos = map(lambda x:x.to(Constants.device), data)
+        src_seq, tgt_seq, src_pos, tgt_pos = map(lambda x: x.to(Constants.device), data)
         batch_size = src_seq.size(0)
         src_id, tgt_id = self.type_dict[src_type], self.type_dict[tgt_type]
 
@@ -330,10 +330,10 @@ class Trainer(MultiprocessingEventLoop):
             mask = (tgt_seq[:, 1:] != Constants.PAD).long()
 
             _, gred_sent = prob.max(dim=-1)
-            gred_sent = gred_sent * mask 
+            gred_sent = gred_sent * mask
             distribution = Categorical(prob)
             samp_sent = distribution.sample()
-            samp_sent = samp_sent * mask 
+            samp_sent = samp_sent * mask
             log_probs = distribution.log_prob(samp_sent)
 
             baseline = self.get_reward(input_seq=src_seq, policy_gen=gred_sent, tgt_seq=tgt_seq, type=tgt_type)
@@ -400,8 +400,8 @@ class Trainer(MultiprocessingEventLoop):
 
         results = []
         with torch.no_grad():
-            simp_seq, simp_pos = map(lambda x: x.to(torch.device('cuda:' + str(rank+1))), batches['simp'])
-            comp_seq, comp_pos = map(lambda x: x.to(torch.device('cuda:' + str(rank+1))), batches['comp'])
+            simp_seq, simp_pos = map(lambda x: x.to(torch.device('cuda:' + str(rank + 1))), batches['simp'])
+            comp_seq, comp_pos = map(lambda x: x.to(torch.device('cuda:' + str(rank + 1))), batches['comp'])
 
             # simp -> comp:
             gen_comp, gen_comp_pos = self.model.generate(
@@ -411,7 +411,7 @@ class Trainer(MultiprocessingEventLoop):
                 tgt_id=self.type_dict['comp'],
                 max_len=params.len_max_seq,
                 mode='otf',
-                device=torch.device('cuda:' + str(rank+1))
+                device=torch.device('cuda:' + str(rank + 1))
             )
             # comp -> simp:
             gen_simp, gen_simp_pos = self.model.generate(
@@ -421,9 +421,9 @@ class Trainer(MultiprocessingEventLoop):
                 tgt_id=self.type_dict['simp'],
                 max_len=params.len_max_seq,
                 mode='otf',
-                device=torch.device('cuda:' + str(rank+1))
+                device=torch.device('cuda:' + str(rank + 1))
             )
-        
+
         comp_simp_batch = [gen_comp.cpu(), simp_seq.cpu(), gen_comp_pos.cpu(), simp_pos.cpu()]
         simp_comp_batch = [gen_simp.cpu(), comp_seq.cpu(), gen_simp_pos.cpu(), comp_pos.cpu()]
 
@@ -465,12 +465,12 @@ class Trainer(MultiprocessingEventLoop):
                     comp_loss = key_loss
                 logger.info(key + ": " + str(key_loss))
                 self.stat[key].clear()
-
-            logger.info("generation time: " +  str(self.gen_time))
-            logger.info("total time cost: " + str(time.time() - self.start_time))
+            logger.info("number of iterations: " + str(self.n_iter))
+            logger.info("generation time: " + str(self.gen_time))
+            logger.info("total time cost: " + str((time.time() - self.start_time)/60))
 
             self.gen_time = 0
-            self.start_time = 0
+            self.start_time = time.time()
             return simp_loss, comp_loss
 
     def end_epoch(self, scores):
