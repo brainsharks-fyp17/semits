@@ -72,7 +72,7 @@ mkdir -p ${DUMP_PATH}
 mkdir -p ${CHECK_POINT}
 
 python -u main.py \
---use_check 0 \
+--use_check 1 \
 --n_enc_layers ${ENC_LAYERS} \
 --n_dec_layers ${DEC_LAYERS} \
 --d_model ${D_MODEL} \
@@ -104,7 +104,7 @@ python -u main.py \
 --epoch_size 150000 \
 --freeze_enc_emb 0 \
 --freeze_dec_emb 0 \
---pretrain_autoencoder 20000 \
+--pretrain_autoencoder 25000 \
 --lr ${LR} \
 --use_multi_process 1 \
 --otf_num_processes 2 \
@@ -123,7 +123,7 @@ python -u main.py \
 --beam_size ${BEAM_SIZE} \
 --supervised_rate ${SUPERVISED_RATE} \
 --rl_finetune  ${RL_FINETUNE} \
---use_pretrained_model 0 \
+--use_pretrained_model 1 \
 --gamma ${GAMMA} \
 --delta ${DELATA} \
 --otf_back_translation 1 \
