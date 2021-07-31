@@ -1,5 +1,5 @@
 import time
-import numpy as np 
+import numpy as np
 import codecs
 import argparse
 from dataset.loader import load_data
@@ -201,15 +201,16 @@ def main(params):
             if i % 5000 == 0:
                 simp_loss, comp_loss = trainer.print_stats(pretrain=True)
                 # score = evaluator.eval_all(use_pointer=False)
-                
+
         logger.info("saving model pid: "+str(os.getpid()))
         trainer.save_model(params.name)
         return
 
     logger.info("==================== Eval at AutoEncoder Only ====================")
-    # scores = evaluator.eval_all(use_pointer=False)
+    scores = evaluator.eval_all(use_pointer=False)
+    # print(scores)
 
-    trainer.start_back_translation()
+    trainer.start_back_translation() # this line does nothing
     for ep in range(params.max_epoch):
         logger.info(" ======================== Start Epoch %i ======================" % ep)
         trainer.n_sentences = 0
@@ -244,6 +245,7 @@ def main(params):
                     otf_gamma = params.gamma
 
                 before_gen = time.time()
+                otf_iterator = trainer.otf_bt_gen_async()
                 batches = next(otf_iterator)
                 trainer.gen_time += time.time() - before_gen
 
@@ -253,7 +255,7 @@ def main(params):
             trainer.iter()
 
         logger.info("*********** Evaluating ***********")
-        scores = evaluator.eval_all(use_pointer=False)
+        scores = evaluator.eval_all(use_pointer=False) # use_pointer param doesn't do anything
         sari = float(scores['sari'])
         # trainer.model_scheduler.step(sari)
         is_end = trainer.end_epoch(scores)

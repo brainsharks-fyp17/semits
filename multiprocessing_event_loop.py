@@ -65,6 +65,7 @@ class MultiprocessingEventLoop(object):
             """Handle the more complicated case where we want all available
             results of a given type."""
             # We'll return any results that are already finished.
+            logger.info("fetch_all_result_generator "+str(os.getpid()))
             results = list(self.return_buffer[expected_type])  # use list() to copy
             self.return_buffer[expected_type].clear()
 

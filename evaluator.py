@@ -130,20 +130,25 @@ class Evaluator(object):
         return SARIsent(ori_sent, pred_sent, [ref_sent])
 
     def get_sari(self, ori, pred, ref, ids):
+
         pred_list = pred.squeeze(0).tolist()
         ref_list = ref.squeeze(0).tolist()
         ori_list = ori.squeeze(0).tolist()
+        # print(pred_list)
+        # print(ref_list)
+        # print(ori_list)
 
-        pred_seq = [self.index2word[num] for num in pred_list if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
-        ref_seq = [self.index2word[num] for num in ref_list if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
-        ori_seq = [self.index2word[num] for num in ori_list if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
+        pred_seq = [self.index2word[num[0]] for num in pred_list if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
+        ref_seq = [self.index2word[num[0]] for num in ref_list if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
+        ori_seq = [self.index2word[num[0]] for num in ori_list if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
 
         ori_sent = self.merge_subword(ori_seq)
         pred_sent = self.merge_subword(pred_seq)
         ref_sent = self.merge_subword(ref_seq)
         self.ref_list.append([ref_sent.split()])
         self.output_list.append(pred_sent.split())
-
+        # logger.info(self.ref_list)
+        # logger.info(self.output_list)
         # reward = self.get_reward(ori_sent, pred_sent, ref_sent)
 
         keep, dels, add = SARIsent(ori_sent, pred_sent, [ref_sent])
@@ -185,7 +190,8 @@ class Evaluator(object):
 
         with torch.no_grad():
             loader = self.get_loader('encdec', type, None)
-
+            logger.info(str(loader))
+            logger.info(len(loader))
             for step, batch in enumerate(loader):
                 src_seq, src_pos, tgt_seq, tgt_pos = map(lambda x: x.to(Constants.device), batch)
 
@@ -220,6 +226,7 @@ class Evaluator(object):
 
             t_keep, t_del, t_add = np.zeros((4, 3)), np.zeros((4, 3)), np.zeros((4, 3))
             # t_sari, t_keep, t_del, t_add = [], [], [], []
+            print()
             for step, batch in enumerate(loader):
                 
                 src_seq, src_pos, tgt_seq, tgt_pos = map(lambda x: x.to(Constants.device), batch)
@@ -264,8 +271,8 @@ class Evaluator(object):
         return float(score), float(bleu)
 
     def eval_all(self, use_pointer, mode='dev'):
-        # self.auto_encoder_eval('comp')
-        # self.auto_encoder_eval('simp')
+        self.auto_encoder_eval('comp')
+        self.auto_encoder_eval('simp')
         scores = {}
         sari, bleu = self.enc_dec_eval('comp', 'simp', use_pointer=use_pointer, mode=mode)
         scores['sari'] = sari

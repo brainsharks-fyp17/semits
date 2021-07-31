@@ -1,3 +1,5 @@
+import os
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -68,6 +70,7 @@ class Transformer(nn.Module):
             proj[1].bias = proj[0].bias
 
         self.tgt_word_prj = nn.ModuleList(proj)
+        logger.info("Init Transformer model at "+str(os.getpid()))
 
     def forward(self, src_seq, src_pos, tgt_seq, tgt_pos, src_id, tgt_id):
 
@@ -80,6 +83,7 @@ class Transformer(nn.Module):
         return seq_logit.view(-1, seq_logit.size(2))
 
     def generate(self, src_seq, src_pos, src_id, tgt_id, max_len, mode='otf', device=Constants.device):
+        print("Model.generate")
         with torch.no_grad():
             enc_output, *_ = self.encoder(src_seq, src_pos, src_id)
             batch_size = src_seq.size(0)
@@ -111,6 +115,7 @@ class Transformer(nn.Module):
                         break
 
         if mode == 'otf':
+            print("Model generate mode oft")
             return tgt, tgt_pos
         else:
             return tgt, seq_logit

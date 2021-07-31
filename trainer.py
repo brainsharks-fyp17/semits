@@ -93,6 +93,7 @@ class Trainer(MultiprocessingEventLoop):
 
     def _async_otf_init(self, rank, device_id, params, gpu_id):
         # build model on subprocess
+        logger.info("_async_otf_init on "+str(os.getpid()))
         cpu_device = 'cpu'
         from copy import deepcopy
         params = deepcopy(params)
@@ -127,6 +128,7 @@ class Trainer(MultiprocessingEventLoop):
         set_flat_params(self.model, model_params)
 
     def get_iterator(self, iter_name, src_type, tgt_type):
+        logger.info("get_iterator "+iter_name+":"+str(os.getpid()))
         key = ",".join([x for x in [iter_name, src_type, tgt_type] if x is not None])
 
         if iter_name == 'encdec' or iter_name == 'otf':
@@ -142,6 +144,7 @@ class Trainer(MultiprocessingEventLoop):
         return data_iter
 
     def get_batch(self, iter_name, src_type, tgt_type):
+        logger.info("get_batch "+str(iter_name)+str(src_type)+str(tgt_type)+str(os.getpid()))
         key = ",".join([x for x in [iter_name, src_type, tgt_type] if x is not None])
         iterator = self.iterators.get(key, None)
         if iterator is None:
@@ -310,6 +313,7 @@ class Trainer(MultiprocessingEventLoop):
         """
         On the fly back-translation.
         """
+        logger.info("otf_bt: "+str(os.getpid()))
         params = self.params
         src_type, tgt_type, data = batch['src_type'], batch['tgt_type'], batch['data']
         src_seq, tgt_seq, src_pos, tgt_pos = map(lambda x:x.to(Constants.device), data)
@@ -360,6 +364,7 @@ class Trainer(MultiprocessingEventLoop):
         self.model_optimizer.step()
 
     def otf_bt_gen_async(self, init_cache_size=None):
+        logger.info("otf_bt_gen_async "+str(os.getpid()))
         # print("Populating initial OTF generation cache ...")
         if init_cache_size is None:
             init_cache_size = self.num_replicas
@@ -385,6 +390,7 @@ class Trainer(MultiprocessingEventLoop):
         """
         Create batches for CPU threads.
         """
+        logger.info("get_otf_batches "+str(os.getpid()))
         simp = self.get_batch('otf', 'simp', None)
         comp = self.get_batch('otf', 'comp', None)
         batches = {'simp': simp, 'comp': comp}
@@ -395,13 +401,17 @@ class Trainer(MultiprocessingEventLoop):
         """
         On the fly back-translation (generation step).
         """
+        logger.info("_async_otf_bt_gen "+str(os.getpid())+" rank: "+str(rank))
         params = self.params
         self.model.eval()
 
         results = []
         with torch.no_grad():
-            simp_seq, simp_pos = map(lambda x: x.to(torch.device('cuda:' + str(rank+1))), batches['simp'])
-            comp_seq, comp_pos = map(lambda x: x.to(torch.device('cuda:' + str(rank+1))), batches['comp'])
+            # simp_seq, simp_pos = map(lambda x: x.to(torch.device('cuda:' + str(rank+1))), batches['simp'])
+            # comp_seq, comp_pos = map(lambda x: x.to(torch.device('cuda:' + str(rank+1))), batches['comp'])
+            # changing oft-bt-gen to cpu
+            simp_seq, simp_pos = map(lambda x: x.to(torch.device('cpu')), batches['simp'])
+            comp_seq, comp_pos = map(lambda x: x.to(torch.device('cpu')), batches['comp'])
 
             # simp -> comp:
             gen_comp, gen_comp_pos = self.model.generate(
@@ -411,7 +421,8 @@ class Trainer(MultiprocessingEventLoop):
                 tgt_id=self.type_dict['comp'],
                 max_len=params.len_max_seq,
                 mode='otf',
-                device=torch.device('cuda:' + str(rank+1))
+                # device=torch.device('cuda:' + str(rank+1))
+                device='cpu'
             )
             # comp -> simp:
             gen_simp, gen_simp_pos = self.model.generate(
@@ -421,7 +432,8 @@ class Trainer(MultiprocessingEventLoop):
                 tgt_id=self.type_dict['simp'],
                 max_len=params.len_max_seq,
                 mode='otf',
-                device=torch.device('cuda:' + str(rank+1))
+                # device=torch.device('cuda:' + str(rank+1))
+                device='cpu'
             )
         
         comp_simp_batch = [gen_comp.cpu(), simp_seq.cpu(), gen_comp_pos.cpu(), simp_pos.cpu()]
@@ -474,6 +486,7 @@ class Trainer(MultiprocessingEventLoop):
             return simp_loss, comp_loss
 
     def end_epoch(self, scores):
+        logger.info("end_epoch "+str(os.getpid()))
         if self.stopping_criterion is not None:
             assert self.stopping_criterion in scores
             if scores[self.stopping_criterion] > self.best_stopping_criterion:
@@ -504,6 +517,7 @@ class Trainer(MultiprocessingEventLoop):
         return 0
 
     def save_checkpoint(self):
+        logger.info("save_checkpoint "+str(os.getpid()))
         checkpoint_data = {
             'model': self.model,
             'optimizer': self.model_optimizer,
@@ -517,6 +531,7 @@ class Trainer(MultiprocessingEventLoop):
         """
         Reload a checkpoint if we find one.
         """
+        logger.info("reload_checkpoint "+str(os.getpid()))
         # reload checkpoint
         checkpoint_path = os.path.join(self.params.checkpoint_path, self.params.name)
         if not os.path.isfile(checkpoint_path):
@@ -538,4 +553,5 @@ class Trainer(MultiprocessingEventLoop):
         }, path)
 
     def start_back_translation(self):
+        logger.info("start_back_translation "+str(os.getpid()))
         self.model_optimizer = torch.optim.Adam(self.model.parameters(), lr=self.params.lr, betas=(0.5, 0.999))
