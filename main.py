@@ -207,7 +207,7 @@ def main(params):
         return
 
     logger.info("==================== Eval at AutoEncoder Only ====================")
-    scores = evaluator.eval_all(use_pointer=False)
+    # scores = evaluator.eval_all(use_pointer=False)
     # print(scores)
 
     trainer.start_back_translation() # this line does nothing

@@ -271,8 +271,8 @@ class Evaluator(object):
         return float(score), float(bleu)
 
     def eval_all(self, use_pointer, mode='dev'):
-        self.auto_encoder_eval('comp')
-        self.auto_encoder_eval('simp')
+        # self.auto_encoder_eval('comp')
+        # self.auto_encoder_eval('simp')
         scores = {}
         sari, bleu = self.enc_dec_eval('comp', 'simp', use_pointer=use_pointer, mode=mode)
         scores['sari'] = sari
