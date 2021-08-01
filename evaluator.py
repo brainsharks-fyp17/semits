@@ -224,7 +224,6 @@ class Evaluator(object):
 
             t_keep, t_del, t_add = np.zeros((4, 3)), np.zeros((4, 3)), np.zeros((4, 3))
             # t_sari, t_keep, t_del, t_add = [], [], [], []
-            print()
             for step, batch in enumerate(loader):
                 
                 src_seq, src_pos, tgt_seq, tgt_pos = map(lambda x: x.to(Constants.device), batch)
@@ -257,13 +256,13 @@ class Evaluator(object):
                 #t_add.append(add)
 
             # score, keep, dels, add = calculate_suff(t_keep, t_del, t_add)
-            keep_s, dels_s, add_s = mean(keep_list), mean(dels_list), mean(dels_list)
-            score = (keep_s+dels_s+add_s)/3
+
             #score = mean(t_sari)
             #keep = mean(t_keep)
             #dels = mean(t_del)
             #add = mean(t_add)
             bleu = corpus_bleu(self.ref_list, self.output_list)
+            score = bleu
 
         logger.info('average_sari: ' + str(score))
         logger.info('average_bleu: ' + str(bleu))
