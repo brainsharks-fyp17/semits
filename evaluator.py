@@ -258,6 +258,7 @@ class Evaluator(object):
 
             # score, keep, dels, add = calculate_suff(t_keep, t_del, t_add)
             score, keep, dels, add = calculate_suff(keep_list, dels_list, add_list)
+            score, keep,dels, add = mean(score), mean(keep), mean(dels), mean(add)
             #score = mean(t_sari)
             #keep = mean(t_keep)
             #dels = mean(t_del)
