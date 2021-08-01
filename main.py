@@ -184,6 +184,7 @@ def main(params):
 
     trainer = Trainer(model, lm, data, params, logger)
     if params.use_check:
+        logger.info("Loading last checkpoint")
         trainer.reload_checkpoint()
     evaluator = Evaluator(trainer.model, lm, data, params)
 

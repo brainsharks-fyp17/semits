@@ -138,9 +138,9 @@ class Evaluator(object):
         # print(ref_list)
         # print(ori_list)
 
-        pred_seq = [self.index2word[num[0]] for num in pred_list if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
-        ref_seq = [self.index2word[num[0]] for num in ref_list if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
-        ori_seq = [self.index2word[num[0]] for num in ori_list if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
+        pred_seq = [self.index2word[num] for num in pred_list if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
+        ref_seq = [self.index2word[num] for num in ref_list if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
+        ori_seq = [self.index2word[num] for num in ori_list if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
 
         ori_sent = self.merge_subword(ori_seq)
         pred_sent = self.merge_subword(pred_seq)
@@ -190,8 +190,6 @@ class Evaluator(object):
 
         with torch.no_grad():
             loader = self.get_loader('encdec', type, None)
-            logger.info(str(loader))
-            logger.info(len(loader))
             for step, batch in enumerate(loader):
                 src_seq, src_pos, tgt_seq, tgt_pos = map(lambda x: x.to(Constants.device), batch)
 
@@ -240,16 +238,26 @@ class Evaluator(object):
                     mode='translate',
                     device=Constants.device,
                 )
-                keep, dels, add = self.get_sari(src_seq[:, 1:-1], pred, tgt_seq[:, 1:-1], step)
-                t_keep = t_keep + keep
-                t_del = t_del + dels
-                t_add = t_add + add
+                # keep, dels, add = self.get_sari(src_seq[:, 1:-1], pred, tgt_seq[:, 1:-1], step)
+                keep_list , dels_list, add_list = [],[],[]
+                for i,x in enumerate(zip(src_seq[:, 1:-1], pred, tgt_seq[:, 1:-1])):
+                    keep, dels, add = self.get_sari(x[0], x[1], x[2], step)
+                    keep_list.append(keep)
+                    dels_list.append(dels)
+                    add_list.append(add)
+
+
+                # t_keep = t_keep + keep
+                # t_del = t_del + dels
+                # t_add = t_add + add
+
                 #t_sari.append(sent_sari)
                 #t_keep.append(keep)
                 #t_del.append(dels)
                 #t_add.append(add)
 
-            score, keep, dels, add = calculate_suff(t_keep, t_del, t_add)
+            # score, keep, dels, add = calculate_suff(t_keep, t_del, t_add)
+            score, keep, dels, add = calculate_suff(keep_list, dels_list, add_list)
             #score = mean(t_sari)
             #keep = mean(t_keep)
             #dels = mean(t_del)
