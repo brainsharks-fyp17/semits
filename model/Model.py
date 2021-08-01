@@ -83,7 +83,7 @@ class Transformer(nn.Module):
         return seq_logit.view(-1, seq_logit.size(2))
 
     def generate(self, src_seq, src_pos, src_id, tgt_id, max_len, mode='otf', device=Constants.device):
-        print("Model.generate")
+        # print("Model.generate")
         with torch.no_grad():
             enc_output, *_ = self.encoder(src_seq, src_pos, src_id)
             batch_size = src_seq.size(0)
