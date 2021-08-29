@@ -72,7 +72,7 @@ mkdir -p ${DUMP_PATH}
 mkdir -p ${CHECK_POINT}
 
 python -u main.py \
---use_check 1 \
+--use_check 0 \
 --n_enc_layers ${ENC_LAYERS} \
 --n_dec_layers ${DEC_LAYERS} \
 --d_model ${D_MODEL} \
@@ -109,7 +109,7 @@ python -u main.py \
 --use_multi_process 1 \
 --otf_num_processes 2 \
 --otf_sync_params_every 300 \
---us_pretrain_embedding 0 \
+--us_pretrain_embedding 1 \
 --embedding_path ${EMBEDDING_PATH} \
 --stopping_criterion 'sari' \
 --name ${NAME} \
@@ -123,7 +123,7 @@ python -u main.py \
 --beam_size ${BEAM_SIZE} \
 --supervised_rate ${SUPERVISED_RATE} \
 --rl_finetune  ${RL_FINETUNE} \
---use_pretrained_model 1 \
+--use_pretrained_model 0 \
 --gamma ${GAMMA} \
 --delta ${DELATA} \
 --otf_back_translation 1 \
