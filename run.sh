@@ -31,8 +31,8 @@ LM_PATH="${RESOURCE_DIR}/lang.pkl"
 
 COMP_FREQUENT_LIST="${RESOURCE_DIR}/denoise/frequent_comp.list"
 SIMP_FREQUENT_LIST="${RESOURCE_DIR}/denoise/frequent_simp.list"
-COMP_PPDB_RULES="${RESOURCE_DIR}/denoise/comp_rules.pkl"
-SIMP_PPDB_RULES="${RESOURCE_DIR}/denoise/simp_rules.pkl"
+COMP_PPDB_RULES="${RESOURCE_DIR}/denoise/comp_rules.txt"
+SIMP_PPDB_RULES="${RESOURCE_DIR}/denoise/simp_rules.txt"
 STOP_LIST="${RESOURCE_DIR}/stop.list"
 
 VOCAB_PATH="${DATA_DIR}/vocab.list"

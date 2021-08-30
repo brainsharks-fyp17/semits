@@ -12,7 +12,7 @@ import model.Constants as Constants
 class Beam():
     ''' Beam search '''
 
-    def __init__(self, size, type=1, device=False):
+    def __init__(self, size, type=1, device=None):
 
         self.size = size
         self._done = False
@@ -67,7 +67,7 @@ class Beam():
         # bestScoresId is flattened as a (beam x word) array,
         # so we need to calculate which word and beam each score came from
         prev_k = best_scores_id / num_words
-        self.prev_ks.append(prev_k)
+        self.prev_ks.append(prev_k.long())
         self.next_ys.append(best_scores_id - prev_k * num_words)
 
         # End condition is when top-of-beam is EOS.

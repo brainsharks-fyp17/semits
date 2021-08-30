@@ -2,7 +2,7 @@ ROOT=$(pwd)
 DATA_DIR="${ROOT}/data"
 
 PARA_DIR="${DATA_DIR}/parallel"
-DEV_DATASET="newsela"
+DEV_DATASET="si-cc"
 PARA_DEV_PATH="${PARA_DIR}/${DEV_DATASET}/dev.txt"
 PARA_TEST_PATH="${PARA_DIR}/${DEV_DATASET}/test.txt"
 SUPERVISED_RATE=0
