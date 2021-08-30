@@ -151,6 +151,7 @@ def main(params):
     # scores = evaluator.eval_all(use_pointer=False, mode='dev')
     logger.info("TEST:")
     scores = evaluator.eval_all(use_pointer=False, mode='test')
+    logger.info(str(scores))
 
 
 if __name__ == '__main__':
