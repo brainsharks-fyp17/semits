@@ -119,7 +119,7 @@ class Evaluator(object):
         with torch.no_grad():
             loader = self.get_loader('encdec', src_type, tgt_type, mode=mode)
             for step, batch in enumerate(loader):
-                
+                logger.info("step: "+str(step)+" batch size: "+str(len(batch)))
                 src_seq, src_pos, tgt_seq, tgt_pos = map(lambda x: x.to(Constants.device), batch)
                 if params.beam_size > 0:
                     generate_func = self.model.generate_beam_search
@@ -135,7 +135,9 @@ class Evaluator(object):
                     mode='translate',
                     device=Constants.device,
                 )
+                logger.debug("prediction: "+str(pred))
                 sari, avgkeepscore, avgdelscore, avgaddscore = self.get_sari(src_seq[:, 1:-1], pred, tgt_seq[:, 1:-1], step)
+                logger.info("Running SARI: "+str(sari))
                 total_sari += sari
                 total_keep += avgkeepscore
                 total_del += avgdelscore
