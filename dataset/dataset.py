@@ -87,20 +87,15 @@ class MonoLingualData(data.Dataset):
         ret_seq = [seq[i] for i in index]
         return ret_seq
 
-    # def word_replace(self, seq, rules):
-    #     for key, values in rules.items():
-    #         if key in seq and np.random.rand() <= self.params.word_replace and key not in self.stop_set:
-    #             index = np.random.randint(0, len(values))
-    #             alternative_words = values[index]
-    #             if alternative_words in ['.', ',', ';', '\'', '`', '*', '?', '\\', '\\\\']:
-    #                 continue
-    #             try:
-    #                 seq = re.sub(key, alternative_words, seq, count=1)
-    #             except:
-    #                 print("error occurred, the key is ", key, alternative_words)
-    #                 pass
-    #
-    #     return seq.split()
+    def word_replace(self, seq, rules):
+        for key, value in rules.items():
+            if key in seq and np.random.rand() <= self.params.word_replace and key not in self.stop_set:
+                try:
+                    seq = re.sub(key, value, seq, count=1)
+                except Exception as e:
+                    print("PPDB substitution error occurred, the key is ", key, value)
+
+        return seq.split()
 
     def word_additive(self, seq, word_ids):
         index = np.random.randint(0, self.__len__())
@@ -161,10 +156,10 @@ class MonoLingualData(data.Dataset):
 
         if self.train_mode == 'autoencoder':
             # if item in self.ppdb_rules:
-            #     rules = self.ppdb_rules[item]
-            #     corupt_seq = self.word_replace(corupt_seq, rules)
+            # rules = self.ppdb_rules[item]
+            corupt_seq = self.word_replace(corupt_seq, self.ppdb_rules)
             # else:
-            corupt_seq = corupt_seq.split()
+            #     corupt_seq = corupt_seq.split()
             if self.params.shuffle_mode == 'unigram':
                 word_ids = np.arange(len(corupt_seq), dtype=int)
             elif self.params.shuffle_mode == 'bigram':

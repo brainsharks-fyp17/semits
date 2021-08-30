@@ -29,14 +29,14 @@ def load_mono_data(params, vocab):
             if 'comp' in name:
                 logger.info("Loading data from %s ..." % params.comp_frequent_list)
                 frequent_list = load_frequent_list(params.comp_frequent_list)
-                # logger.info("Loading data from %s ..." % params.comp_ppdb_rules)
-                # ppdb_rules = load_ppdb_rules(params.comp_ppdb_rules)
+                logger.info("Loading data from %s ..." % params.comp_ppdb_rules)
+                ppdb_rules = load_ppdb_rules(params.comp_ppdb_rules)
                 data_mode = 'comp'
 
             elif 'simp' in name:
                 frequent_list = load_frequent_list(params.simp_frequent_list)
-                # logger.info("Loading data from %s ..." % params.simp_ppdb_rules)
-                # ppdb_rules = load_ppdb_rules(params.simp_ppdb_rules)
+                logger.info("Loading data from %s ..." % params.simp_ppdb_rules)
+                ppdb_rules = load_ppdb_rules(params.simp_ppdb_rules)
                 data_mode = 'simp'
 
             else:
@@ -49,7 +49,7 @@ def load_mono_data(params, vocab):
                     word2index=vocab,
                     max_len=params.len_max_seq,
                     frequent_word_list=frequent_list,
-                    # ppdb_rules=ppdb_rules,
+                    ppdb_rules=ppdb_rules,
                     data_mode=data_mode,
                     train_mode='autoencoder'
                 ),
@@ -65,7 +65,7 @@ def load_mono_data(params, vocab):
                     word2index=vocab,
                     max_len=params.len_max_seq,
                     frequent_word_list=frequent_list,
-                    # ppdb_rules=ppdb_rules,
+                    ppdb_rules=ppdb_rules,
                     data_mode=data_mode,
                     train_mode='otf'
                 ),
@@ -89,11 +89,18 @@ def load_frequent_list(path):
     return frequent_word_list
 
 
-# def load_ppdb_rules(path):
-#     rule_files = codecs.open(path, mode='rb')
-#     ppdb_rules = pickle.load(rule_files)
-#
-#     return ppdb_rules
+def load_ppdb_rules(path):
+    # rule_files = codecs.open(path, mode='rb')
+    # ppdb_rules = pickle.load(rule_files)
+    rule_file = codecs.open(path, "r").readlines()
+    ppdb_rules = dict()
+    for line in rule_file:
+        if "," in line and "-" not in line:
+            data = line.split(",")
+            key = data[0].strip()
+            val = data[1].strip()
+            ppdb_rules[key] = val
+    return ppdb_rules
 
 
 # def load_parallel_data(params, vocab):
