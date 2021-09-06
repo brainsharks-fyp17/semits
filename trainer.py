@@ -533,12 +533,12 @@ class Trainer(MultiprocessingEventLoop):
         """
         logger.info("reload_checkpoint "+str(os.getpid()))
         # reload checkpoint
-        checkpoint_path = os.path.join(self.params.checkpoint_path, self.params.name)
+        checkpoint_path = os.path.join(self.params.checkpoint_path, '%s.pth' % self.params.name)
         if not os.path.isfile(checkpoint_path):
             logger.info("Checkpoint file not found")
             return
         logger.warning('Reloading checkpoint from %s ...' % checkpoint_path)
-        checkpoint_data = torch.load(checkpoint_path)
+        checkpoint_data = torch.load(checkpoint_path, map_location=Constants.device)
 
         self.model = checkpoint_data['model']
         self.epoch = checkpoint_data['epoch']
