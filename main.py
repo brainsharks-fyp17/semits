@@ -166,14 +166,14 @@ def main(params):
     if params.use_pretrained_model:
         logger.info("loading pretrained model")
         path = os.path.join(params.dump_path, '%s.pth' % params.name)
-        model_data = torch.load(path)
+        model_data = torch.load(path, map_location=Constants.device)
         model = model_data['model'].to(Constants.device)
 
-    elif params.pretrain_autoencoder == 0:
-        logger.info("loading pretrained autoencoders")
-        path = os.path.join(params.dump_path, 'autoencoder.pth')
-        model_data = torch.load(path)
-        model = model_data['model'].to(Constants.device)
+    # elif params.pretrain_autoencoder == 0:
+    #     logger.info("loading pretrained autoencoders")
+    #     path = os.path.join(params.dump_path, 'autoencoder.pth')
+    #     model_data = torch.load(path)
+    #     model = model_data['model'].to(Constants.device)
 
     if params.use_lm:
         logger.info("loading pretrained language model")

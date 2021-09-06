@@ -115,7 +115,6 @@ class Transformer(nn.Module):
                         break
 
         if mode == 'otf':
-            print("Model generate mode oft")
             return tgt, tgt_pos
         else:
             return tgt, seq_logit
@@ -222,7 +221,7 @@ class Transformer(nn.Module):
             dec_seq = prepare_beam_dec_seq(inst_dec_beams, len_dec_seq)
             dec_pos = prepare_beam_dec_pos(len_dec_seq, n_active_inst, n_bm)
             word_prob = predict_word(dec_seq, dec_pos, src_seq, enc_output, n_active_inst, n_bm)
-
+            # print("word probabs",word_prob)
             # Update the beam with predicted word prob information and collect incomplete instances
             active_inst_idx_list = collect_active_inst_idx_list(
                 inst_dec_beams, word_prob, inst_idx_to_position_map)
@@ -235,25 +234,29 @@ class Transformer(nn.Module):
                 scores, tail_idxs = inst_dec_beams[inst_idx].sort_scores()
                 all_scores += [scores[:n_best]]
 
-                hyps = [inst_dec_beams[inst_idx].get_hypothesis(i) for i in tail_idxs[:n_best]]
+                hyps = [inst_dec_beams[inst_idx].get_hypothesis(j) for j in tail_idxs[:n_best]]
                 all_hyp += [hyps]
             return all_hyp, all_scores
 
         with torch.no_grad():
-            n_bm = self.args.beam_size
+            n_bm = self.args.beam_size  # beam size is 8
+            # print(src_seq)
             enc_output, *_ = self.encoder(src_seq, src_pos, src_id)
+            # print(enc_output)# enc output is fine, varies from one pre to another, varies in size
 
-            batch_size, seq_len, d_h = enc_output.size()
+            batch_size, seq_len, d_h = enc_output.size()  # ex: [1, 62, 512]
             src_seq = src_seq.repeat(1, n_bm).view(batch_size*n_bm, seq_len)
             enc_output = enc_output.repeat(1, n_bm, 1).view(batch_size*n_bm, seq_len, d_h)
-
+            # print(enc_output.size())
             dec_beams = [Beam(n_bm, type=tgt_id, device=device) for _ in range(batch_size)]
+            # print(dec_beams)  # torch.Size([8, 54, 512])
             active_index_list = list(range(batch_size))
+            # print(active_index_list)
             index2position_map = get_inst_idx_to_tensor_position_map(active_index_list)
 
-            for i in range(max_len):
+            for len_dec_seq in range(1, max_len + 1):
                 active_index_list = beam_decode_step(
-                    dec_beams, i+1, src_seq, enc_output, index2position_map, n_bm
+                    dec_beams, len_dec_seq, src_seq, enc_output, index2position_map, n_bm
                 )
 
                 if not active_index_list:
@@ -267,4 +270,5 @@ class Transformer(nn.Module):
             return otf_batch(batch_hyp)
         else:
             batch_hyp, batch_scores = collect_hypothesis_and_scores(dec_beams, 1)
+            print(batch_hyp)
             return torch.Tensor(batch_hyp[0]).long(), 0
