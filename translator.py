@@ -125,7 +125,8 @@ class Evaluator(object):
                     generate_func = self.model.generate_beam_search
                 else:
                     generate_func = self.model.generate
-
+                # NOT using Beam search
+                generate_func = self.model.generate
                 pred, _ = generate_func(
                     src_seq=src_seq,
                     src_pos=src_pos,
@@ -135,7 +136,7 @@ class Evaluator(object):
                     mode='translate',
                     device=Constants.device,
                 )
-                logger.debug("prediction: "+str(pred))
+                # logger.debug("prediction: "+str(pred))
                 sari, avgkeepscore, avgdelscore, avgaddscore = self.get_sari(src_seq[:, 1:-1], pred, tgt_seq[:, 1:-1], step)
                 logger.info("Running SARI: "+str(sari))
                 total_sari += sari
