@@ -108,7 +108,7 @@ python -u main.py \
 --lr ${LR} \
 --use_multi_process 1 \
 --otf_num_processes 2 \
---otf_sync_params_every 300 \
+--otf_sync_params_every 30 \
 --us_pretrain_embedding 1 \
 --embedding_path ${EMBEDDING_PATH} \
 --stopping_criterion 'sari' \
