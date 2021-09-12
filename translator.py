@@ -151,15 +151,15 @@ class Evaluator(object):
             bleu = corpus_bleu(self.ref_list, self.output_list)
             print(bleu)
 
-        # logger.info('average_sari: ' +  str(total_sari / step))
-        # logger.info('average_keep: ' +  str(total_keep / step))
-        # logger.info('average_del: ' +  str(total_del / step))
-        # logger.info('average_add: ' +  str(total_add / step))
+        logger.info('average_sari: ' + str(total_sari / step))
+        logger.info('average_keep: ' + str(total_keep / step))
+        logger.info('average_del: ' + str(total_del / step))
+        logger.info('average_add: ' + str(total_add / step))
         
-       # path = os.path.join(self.params.dump_path, self.params.name + 'sari.log')
-       # with codecs.open(path, mode='a') as f:
-       #     f.write(" ".join([str(total_sari / step), str(total_keep / step), str(total_del / step), str(total_add / step)]) + '\n')
-       # return total_sari / step
+        path = os.path.join(self.params.dump_path, self.params.name + 'sari.log')
+        with codecs.open(path, mode='a') as f:
+            f.write(" ".join([str(total_sari / step), str(total_keep / step), str(total_del / step), str(total_add / step)]) + '\n')
+        return total_sari / step
 
     def eval_all(self, use_pointer, mode='dev'):
         # self.auto_encoder_eval('comp')
