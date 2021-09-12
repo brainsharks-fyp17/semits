@@ -139,9 +139,9 @@ class Evaluator(object):
         # print(ref_list)
         # print(ori_list)
 
-        pred_seq = [self.index2word[num] for sent in pred_list for num in sent if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
-        ref_seq = [self.index2word[num] for sent in ref_list for num in sent if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
-        ori_seq = [self.index2word[num] for sent in ori_list for num in sent if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
+        pred_seq = [self.index2word[num] for num in pred_list if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
+        ref_seq = [self.index2word[num] for num in ref_list if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
+        ori_seq = [self.index2word[num] for num in ori_list if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
 
         ori_sent = self.merge_subword(ori_seq)
         pred_sent = self.merge_subword(pred_seq)
