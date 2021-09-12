@@ -3,6 +3,7 @@ import os
 from torch.nn import functional as F
 import codecs
 import model.Constants as Constants
+from metrics.FKGL import fkgl_score
 from metrics.STAR import SARIsent
 # from metrics.FKGL import fkgl_score
 import metrics.SARI as sari
@@ -138,9 +139,9 @@ class Evaluator(object):
         # print(ref_list)
         # print(ori_list)
 
-        pred_seq = [self.index2word[num] for num in pred_list if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
-        ref_seq = [self.index2word[num] for num in ref_list if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
-        ori_seq = [self.index2word[num] for num in ori_list if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
+        pred_seq = [self.index2word[num] for sent in pred_list for num in sent if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
+        ref_seq = [self.index2word[num] for sent in ref_list for num in sent if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
+        ori_seq = [self.index2word[num] for sent in ori_list for num in sent if num not in [Constants.PAD, Constants.EOS, Constants.SBOS, Constants.CBOS]]
 
         ori_sent = self.merge_subword(ori_seq)
         pred_sent = self.merge_subword(pred_seq)
@@ -241,32 +242,33 @@ class Evaluator(object):
                     mode='translate',
                     device=Constants.device,
                 )
-                # keep, dels, add = self.get_sari(src_seq[:, 1:-1], pred, tgt_seq[:, 1:-1], step)
-                keep_list , dels_list, add_list = [],[],[]
-                for i,x in enumerate(zip(src_seq[:, 1:-1], pred, tgt_seq[:, 1:-1])):
-                    keep, dels, add = self.get_sari(x[0], x[1], x[2], step)
-                    keep_list.append(keep)
-                    dels_list.append(dels)
-                    add_list.append(add)
+                # print(pred)
+                keep, dels, add = self.get_sari(src_seq[:, 1:-1], pred, tgt_seq[:, 1:-1], step)
+                # keep_list , dels_list, add_list = [],[],[]
+                # for i,x in enumerate(zip(src_seq[:, 1:-1], pred, tgt_seq[:, 1:-1])):
+                #     keep, dels, add = self.get_sari(x[0], x[1], x[2], step)
+                #     keep_list.append(keep)
+                #     dels_list.append(dels)
+                #     add_list.append(add)
 
 
-                # t_keep = t_keep + keep
-                # t_del = t_del + dels
-                # t_add = t_add + add
+                t_keep = t_keep + keep
+                t_del = t_del + dels
+                t_add = t_add + add
 
                 #t_sari.append(sent_sari)
                 #t_keep.append(keep)
                 #t_del.append(dels)
                 #t_add.append(add)
 
-            # score, keep, dels, add = calculate_suff(t_keep, t_del, t_add)
+            score, keep, dels, add = calculate_suff(t_keep, t_del, t_add)
 
             #score = mean(t_sari)
             #keep = mean(t_keep)
             #dels = mean(t_del)
             #add = mean(t_add)
             bleu = corpus_bleu(self.ref_list, self.output_list)
-            score = bleu
+            # score = bleu
 
         logger.info('average_sari: ' + str(score))
         logger.info('average_bleu: ' + str(bleu))

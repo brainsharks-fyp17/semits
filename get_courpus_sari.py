@@ -75,6 +75,9 @@ def calculate_suff(t_keep, t_del, t_add):
 def get_sari(comp_path, simp_path, ref_path, num_ref, verbose=False):
     comp_file = codecs.open(comp_path).readlines()
     simp_file = codecs.open(simp_path).readlines()
+    # print(comp_path,len(comp_file))
+    # print(simp_path,len(simp_file))
+
     if num_ref > 1:
         ref_list = []
         for i in range(num_ref):
@@ -83,7 +86,7 @@ def get_sari(comp_path, simp_path, ref_path, num_ref, verbose=False):
 
     else:
         ref_list = [codecs.open(ref_path).readlines()]
-
+    # print(ref_path,len(ref_list))
     t_keep, t_del, t_add = np.zeros((4, 3)), np.zeros((4, 3)), np.zeros((4, 3))
     index = 0.
     for i in range(len(comp_file)):
