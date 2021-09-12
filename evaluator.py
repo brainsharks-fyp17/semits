@@ -230,7 +230,7 @@ class Evaluator(object):
             t_keep, t_del, t_add = np.zeros((4, 3)), np.zeros((4, 3)), np.zeros((4, 3))
             # t_sari, t_keep, t_del, t_add = [], [], [], []
             for step, batch in enumerate(loader):
-                
+
                 src_seq, src_pos, tgt_seq, tgt_pos = map(lambda x: x.to(Constants.device), batch)
 
                 pred, _ = self.model.generate(
@@ -243,13 +243,13 @@ class Evaluator(object):
                     device=Constants.device,
                 )
                 # print(pred)
-                keep, dels, add = self.get_sari(src_seq[:, 1:-1], pred, tgt_seq[:, 1:-1], step)
-                # keep_list , dels_list, add_list = [],[],[]
-                # for i,x in enumerate(zip(src_seq[:, 1:-1], pred, tgt_seq[:, 1:-1])):
-                #     keep, dels, add = self.get_sari(x[0], x[1], x[2], step)
-                #     keep_list.append(keep)
-                #     dels_list.append(dels)
-                #     add_list.append(add)
+                # keep, dels, add = self.get_sari(src_seq[:, 1:-1], pred, tgt_seq[:, 1:-1], step)
+                keep_list , dels_list, add_list = [],[],[]
+                for i, x in enumerate(zip(src_seq[:, 1:-1], pred, tgt_seq[:, 1:-1])):
+                    keep, dels, add = self.get_sari(x[0], x[1], x[2], step)
+                    keep_list.append(keep)
+                    dels_list.append(dels)
+                    add_list.append(add)
 
 
                 t_keep = t_keep + keep
