@@ -16,6 +16,7 @@ OUTPUT_NAME="${TEST_OUTPUT_PARH}/${NAME}"
 if [ ${DEV_DATASET} = "si-cc" ]
 then
 	python extract.py ${PARA_TEST_PATH} ${TEST_OUTPUT_PARH}
+	echo "Extraction done"
 	python get_courpus_sari.py ${OUTPUT_NAME} ${TEST_OUTPUT_PARH}/ref.txt ${TEST_OUTPUT_PARH}/comp.txt 1
 elif [ ${DEV_DATASET} = "wiki_large" ]
 then
