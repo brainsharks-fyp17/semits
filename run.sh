@@ -24,7 +24,7 @@ DEV_DATASET="si-cc"
 PARA_DEV_PATH="${PARA_DIR}/${DEV_DATASET}/dev.txt"
 PARA_TEST_PATH="${PARA_DIR}/${DEV_DATASET}/test.txt"
 PARA_TRAIN_PATH="${PARA_DIR}/${DEV_DATASET}/train${SUPERVISED_RATE}.txt"
-FRC_PATH="${RESOURCE_DIR}/enwiki_vocab_min200.txt"
+FRC_PATH="${RESOURCE_DIR}/si-cc-min200.txt"
 
 EMBEDDING_PATH="${RESOURCE_DIR}/embedding.pkl"
 LM_PATH="${RESOURCE_DIR}/lang.pkl"
