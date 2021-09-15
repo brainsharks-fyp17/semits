@@ -44,7 +44,7 @@ class LanguageModel(nn.Module):
 
     def get_ppl_reward(self, input_seq):
         with torch.no_grad():
-            input_seq = input_seq.to(Constants.device)
+            input_seq = input_seq.to("cpu")
             tgt_seq = input_seq[:, 1:].contiguous()
             input_seq = input_seq[:, :-1].contiguous()
 
