@@ -181,7 +181,8 @@ def main(params):
         # lm = torch.load(path).to(Constants.device)
     else:
         pass
-    lm = LanguageModel(params, emb_size=512, hidden_size=2, ouput_size=2)
+    # 512,30995,2
+    lm = LanguageModel(params, emb_size=512, hidden_size=2, ouput_size=30995)
 
     trainer = Trainer(model, lm, data, params, logger)
     if params.use_check:
