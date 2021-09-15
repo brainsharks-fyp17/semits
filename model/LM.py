@@ -44,6 +44,7 @@ class LanguageModel(nn.Module):
 
     def get_ppl_reward(self, input_seq):
         with torch.no_grad():
+            input_seq = input_seq.to(Constants.device)
             tgt_seq = input_seq[:, 1:].contiguous()
             input_seq = input_seq[:, :-1].contiguous()
 
@@ -62,7 +63,7 @@ class LanguageModel(nn.Module):
         return ppl_reward.cpu().numpy()
 
     def init_embedding(self, args):
-        logger.info("init embeddings with pretrained vector")
+        logger.info("init LM embeddings with pretrained vector")
         pre_train_path = args.embedding_path
         weight_file = codecs.open(pre_train_path, mode='rb')
         emb_weight = pickle.load(weight_file)
