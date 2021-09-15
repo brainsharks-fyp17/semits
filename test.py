@@ -142,7 +142,7 @@ def main(params):
     params.n_src_vocab = len(data['index2word'])
     params.n_tgt_vocab = len(data['index2word'])
     path = os.path.join(params.dump_path, '%s.pth' % params.name)
-    model_data = torch.load(path)
+    model_data = torch.load(path,map_location=Constants.device)
     model = model_data['model'].to(Constants.device)
     model.args = params
 

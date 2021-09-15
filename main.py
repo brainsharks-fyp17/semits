@@ -178,9 +178,10 @@ def main(params):
     if params.use_lm:
         logger.info("loading pretrained language model")
         path = params.lm_path
-        lm = torch.load(path).to(Constants.device)
+        # lm = torch.load(path).to(Constants.device)
     else:
-        lm = None
+        pass
+    lm = LanguageModel(params, emb_size=512, hidden_size=2, ouput_size=2)
 
     trainer = Trainer(model, lm, data, params, logger)
     if params.use_check:

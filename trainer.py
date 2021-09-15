@@ -7,7 +7,7 @@ import time
 import os
 from logging import getLogger
 from nltk.translate.meteor_score import single_meteor_score
-# from metrics.FKGL import fkgl_score
+from metrics.FKGL import fkgl_score
 from metrics.SARI import SARIsent
 import numpy as np
 from nltk.corpus import cmudict
@@ -68,7 +68,7 @@ class Trainer(MultiprocessingEventLoop):
         self.cmu_dict = cmudict.dict()
         self.rewards_simp = []
         self.rewards_comp = []
-        # self.sts_model = STS_model(params)
+        self.sts_model = STS_model(params)
         logger.info("Trainer object created at pid:"+str(os.getpid()))
 
         self.stat = {
@@ -214,100 +214,100 @@ class Trainer(MultiprocessingEventLoop):
             loss.backward()
             self.model_optimizer.step()
 
-    # def get_reward(self, input_seq, policy_gen, tgt_seq, type='simp'):
-    #
-    #     def normal_fkgl(score, type):
-    #         if type == 'simp':
-    #             min_score, max_score = 3, 15
-    #         else:
-    #             min_score, max_score = 15, 30
-    #
-    #         if score <= min_score:
-    #             return 0
-    #         elif score >= max_score:
-    #             return 1
-    #         else:
-    #             return (score - min_score) / (max_score - min_score)
-    #
-    #     fkgl_rewards = []
-    #     embeddings = []
-    #     if type == 'simp':
-    #         lm_rewards = self.lm.get_ppl_reward(policy_gen)
-    #     else:
-    #         lm_rewards = 0
-    #
-    #     for i in range(input_seq.size(0)):
-    #         stop_signal = [Constants.PAD, Constants.EOS, Constants.CBOS, Constants.SBOS]
-    #
-    #         input_eos = (input_seq[i] == Constants.EOS).nonzero()
-    #         policy_eos = (policy_gen[i] == Constants.EOS).nonzero()
-    #
-    #         temp_input_seq = input_seq[i][:input_eos[0][0]+1] if len(input_eos) > 0 and type == 'comp' else input_seq[i]
-    #         temp_policy_gen = policy_gen[i][:policy_eos[0][0]+1] if len(policy_eos) > 0 and type == 'comp' else policy_gen[i]
-    #
-    #         next_input_idx = [int(index) for index in temp_input_seq if int(index) not in stop_signal]
-    #         next_policy_idx = [int(index) for index in temp_policy_gen if int(index) not in stop_signal]
-    #
-    #         next_input_seq = [self.index2word[index] for index in next_input_idx]
-    #         next_policy_gen = [self.index2word[index] for index in next_policy_idx]
-    #
-    #         input_sent, input_align = merge_subword(next_input_seq)
-    #         policy_sent, policy_align = merge_subword(next_policy_gen)
-    #
-    #         fkgl = fkgl_score(policy_sent, self.cmu_dict)
-    #         fkgl = normal_fkgl(fkgl, type)
-    #         fkgl_rewards.append(fkgl)
-    #
-    #         emb_input = self.sts_model.get_embedding(next_input_idx, input_sent, input_align)
-    #         emb_policy = self.sts_model.get_embedding(next_policy_idx, policy_sent, policy_align)
-    #
-    #         embeddings.append(emb_input)
-    #         embeddings.append(emb_policy)
-    #
-    #     fkgl_rewards = np.array(fkgl_rewards)
-    #     if type == 'simp':
-    #         fkgl_rewards = 1 - fkgl_rewards
-    #
-    #     sts_rewards = self.sts_model.get_reward(np.array(embeddings))
-    #
-    #     if type == 'simp':
-    #         rewards = 3 / (1 / (fkgl_rewards + 1e-10) + 1 / (sts_rewards + 1e-10) + 1 / (lm_rewards + 1e-10))
-    #     else:
-    #         rewards = 2 / (1 / (fkgl_rewards + 1e-10) + 1 / (sts_rewards + 1e-10))
-    #
-    #     return rewards
-    #
-    # def policy_gradient_step(self, src_type, tgt_type):
-    #     if self.model is None:
-    #         return
-    #
-    #     self.model.train()
-    #     batch = self.get_batch('otf', src_type, None)
-    #     input_seq, input_pos = map(lambda x: x.to(Constants.device), batch)
-    #     batch_size = input_seq.size(0)
-    #
-    #     policy_gen, log_probs, entropy = self.model.policy_generate(
-    #         src_seq=input_seq,
-    #         src_pos=input_pos,
-    #         src_id=self.type_dict[src_type],
-    #         tgt_id=self.type_dict[tgt_type],
-    #         max_len=self.params.len_max_seq,
-    #         device=Constants.device
-    #     )
-    #
-    #     gradient_mask = (policy_gen != Constants.PAD).float()
-    #     rewards = self.get_reward(input_seq, policy_gen, None)
-    #
-    #     rewards = torch.Tensor(rewards).float().unsqueeze(-1).to(Constants.device)
-    #     log_probs = torch.cat(log_probs, dim=-1)
-    #     policy_loss = - (log_probs * gradient_mask * rewards).sum() / batch_size
-    #     loss = policy_loss - 0.000 * entropy
-    #
-    #     self.model_optimizer.zero_grad()
-    #     loss.backward()
-    #     self.model_optimizer.step()
-    #
-    #     return (gradient_mask * rewards).sum() / batch_size
+    def get_reward(self, input_seq, policy_gen, tgt_seq, type='simp'):
+
+        def normal_fkgl(score, type):
+            if type == 'simp':
+                min_score, max_score = 3, 15
+            else:
+                min_score, max_score = 15, 30
+
+            if score <= min_score:
+                return 0
+            elif score >= max_score:
+                return 1
+            else:
+                return (score - min_score) / (max_score - min_score)
+
+        fkgl_rewards = []
+        embeddings = []
+        if type == 'simp':
+            lm_rewards = self.lm.get_ppl_reward(policy_gen)
+        else:
+            lm_rewards = 0
+
+        for i in range(input_seq.size(0)):
+            stop_signal = [Constants.PAD, Constants.EOS, Constants.CBOS, Constants.SBOS]
+
+            input_eos = (input_seq[i] == Constants.EOS).nonzero()
+            policy_eos = (policy_gen[i] == Constants.EOS).nonzero()
+
+            temp_input_seq = input_seq[i][:input_eos[0][0]+1] if len(input_eos) > 0 and type == 'comp' else input_seq[i]
+            temp_policy_gen = policy_gen[i][:policy_eos[0][0]+1] if len(policy_eos) > 0 and type == 'comp' else policy_gen[i]
+
+            next_input_idx = [int(index) for index in temp_input_seq if int(index) not in stop_signal]
+            next_policy_idx = [int(index) for index in temp_policy_gen if int(index) not in stop_signal]
+
+            next_input_seq = [self.index2word[index] for index in next_input_idx]
+            next_policy_gen = [self.index2word[index] for index in next_policy_idx]
+
+            input_sent, input_align = merge_subword(next_input_seq)
+            policy_sent, policy_align = merge_subword(next_policy_gen)
+
+            fkgl = fkgl_score(policy_sent, self.cmu_dict)
+            fkgl = normal_fkgl(fkgl, type)
+            fkgl_rewards.append(fkgl)
+
+            emb_input = self.sts_model.get_embedding(next_input_idx, input_sent, input_align)
+            emb_policy = self.sts_model.get_embedding(next_policy_idx, policy_sent, policy_align)
+
+            embeddings.append(emb_input)
+            embeddings.append(emb_policy)
+
+        fkgl_rewards = np.array(fkgl_rewards)
+        if type == 'simp':
+            fkgl_rewards = 1 - fkgl_rewards
+
+        sts_rewards = self.sts_model.get_reward(np.array(embeddings))
+
+        if type == 'simp':
+            rewards = 3 / (1 / (fkgl_rewards + 1e-10) + 1 / (sts_rewards + 1e-10) + 1 / (lm_rewards + 1e-10))
+        else:
+            rewards = 2 / (1 / (fkgl_rewards + 1e-10) + 1 / (sts_rewards + 1e-10))
+
+        return rewards
+
+    def policy_gradient_step(self, src_type, tgt_type):
+        if self.model is None:
+            return
+
+        self.model.train()
+        batch = self.get_batch('otf', src_type, None)
+        input_seq, input_pos = map(lambda x: x.to(Constants.device), batch)
+        batch_size = input_seq.size(0)
+
+        policy_gen, log_probs, entropy = self.model.policy_generate(
+            src_seq=input_seq,
+            src_pos=input_pos,
+            src_id=self.type_dict[src_type],
+            tgt_id=self.type_dict[tgt_type],
+            max_len=self.params.len_max_seq,
+            device=Constants.device
+        )
+
+        gradient_mask = (policy_gen != Constants.PAD).float()
+        rewards = self.get_reward(input_seq, policy_gen, None)
+
+        rewards = torch.Tensor(rewards).float().unsqueeze(-1).to(Constants.device)
+        log_probs = torch.cat(log_probs, dim=-1)
+        policy_loss = - (log_probs * gradient_mask * rewards).sum() / batch_size
+        loss = policy_loss - 0.000 * entropy
+
+        self.model_optimizer.zero_grad()
+        loss.backward()
+        self.model_optimizer.step()
+
+        return (gradient_mask * rewards).sum() / batch_size
 
     def otf_bt(self, batch, lambda_xe, use_pointer=False, gamma=0):
         """
