@@ -7,6 +7,8 @@ data/nonpara/wiki-split.en.lower
 data/nonpara/wiki-split.sen.lower
 data/nonpara/simp_train.txt
 data/nonpara/comp_train.txt
+resource/denoise/comp_rules.txt
+resource/denoise/simp_rules.txt
 
 
 # Byte-compiled / optimized / DLL files
