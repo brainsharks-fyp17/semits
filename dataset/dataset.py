@@ -103,7 +103,7 @@ class MonoLingualData(data.Dataset):
             if gram in rules:
                 if np.random.rand() <= self.params.word_replace and gram not in self.stop_set:
                     try:
-                        seq = re.sub(gram, random.choice(rules[gram]), count=1)
+                        seq = re.sub(gram, random.choice(rules[gram]), seq, count=1)
                     except Exception as e:
                         print("PPDB substitution error occurred, the key is ", gram)
 
