@@ -1,4 +1,5 @@
 import codecs
+import random
 import re
 
 import numpy as np
@@ -88,12 +89,30 @@ class MonoLingualData(data.Dataset):
         return ret_seq
 
     def word_replace(self, seq, rules):
-        for key, value in rules.items():
-            if key in seq and np.random.rand() <= self.params.word_replace and key not in self.stop_set:
-                try:
-                    seq = re.sub(key, value, seq, count=1)
-                except Exception as e:
-                    print("PPDB substitution error occurred, the key is ", key, value)
+        def get_uni_bi_grams(seq_in):
+            seq_in = seq_in.strip()
+            uni = seq_in.split()
+            bi = []
+            for i in range(len(uni)-1):
+                bi.append(uni[i]+" "+uni[i+1])
+            uni.extend(bi)
+            return uni
+
+        uni_bi_grams = get_uni_bi_grams(seq)
+        for gram in uni_bi_grams:
+            if gram in rules:
+                if np.random.rand() <= self.params.word_replace and gram not in self.stop_set:
+                    try:
+                        seq = re.sub(gram, random.choice(rules[gram]), count=1)
+                    except Exception as e:
+                        print("PPDB substitution error occurred, the key is ", gram)
+
+        # for key, value in rules.items():
+        #     if key in seq and np.random.rand() <= self.params.word_replace and key not in self.stop_set:
+        #         try:
+        #             seq = re.sub(key, value, seq, count=1)
+        #         except Exception as e:
+        #             print("PPDB substitution error occurred, the key is ", key, value)
 
         return seq.split()
 
@@ -157,9 +176,9 @@ class MonoLingualData(data.Dataset):
         if self.train_mode == 'autoencoder':
             # if item in self.ppdb_rules:
             #     rules = self.ppdb_rules[item]
-            #     corupt_seq = self.word_replace(corupt_seq, rules)
+            corupt_seq = self.word_replace(corupt_seq, self.ppdb_rules)
             # else:
-            corupt_seq = corupt_seq.split()
+            # corupt_seq = corupt_seq.split()
             if self.params.shuffle_mode == 'unigram':
                 word_ids = np.arange(len(corupt_seq), dtype=int)
             elif self.params.shuffle_mode == 'bigram':

@@ -99,7 +99,10 @@ def load_ppdb_rules(path):
             data = line.split(",")
             key = data[0].strip()
             val = data[1].strip()
-            ppdb_rules[key] = val
+            if key in ppdb_rules:
+                ppdb_rules[key].append(val)
+            else:
+                ppdb_rules[key] = [val]
     return ppdb_rules
 
 
