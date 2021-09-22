@@ -49,7 +49,7 @@ HEADS=8
 D_K=$[${D_MODEL}/${HEADS}]
 D_V=$[${D_MODEL}/${HEADS}]
 MAX_LEN=120
-BEAM_SIZE=0
+BEAM_SIZE=8
 
 # =========== Denoising Parameters ===============
 WORD_SHUFFLE=3
@@ -100,11 +100,11 @@ python -u main.py \
 --word_dropout ${WORD_DROPOUT} \
 --word_replace ${WORD_REPLACE} \
 --frc_path ${FRC_PATH} \
---batch_size 8 \
---epoch_size 10 \
+--batch_size 128 \
+--epoch_size 1200 \
 --freeze_enc_emb 0 \
 --freeze_dec_emb 0 \
---pretrain_autoencoder 100 \
+--pretrain_autoencoder 100000 \
 --lr ${LR} \
 --use_multi_process 1 \
 --otf_num_processes 2 \
