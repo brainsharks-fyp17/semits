@@ -130,7 +130,7 @@ class Evaluator(object):
                 else:
                     generate_func = self.model.generate
                 # NOT using Beam search
-                generate_func = self.model.generate
+                # generate_func = self.model.generate
                 pred, _ = generate_func(
                     src_seq=src_seq,
                     src_pos=src_pos,
