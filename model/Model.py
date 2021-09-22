@@ -270,5 +270,5 @@ class Transformer(nn.Module):
             return otf_batch(batch_hyp)
         else:
             batch_hyp, batch_scores = collect_hypothesis_and_scores(dec_beams, 1)
-            print(batch_hyp)
+            # print(batch_hyp)
             return torch.Tensor(batch_hyp[0]).long(), 0
