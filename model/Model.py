@@ -152,6 +152,7 @@ class Transformer(nn.Module):
         return tgt[:, 1:], log_probs, entropy
 
     def generate_beam_search(self, src_seq, src_pos, src_id, tgt_id, max_len, mode='otf', device=Constants.device):
+        print("Gen beam search")
         def get_inst_idx_to_tensor_position_map(inst_idx_list):
             ''' Indicate the position of an instance in a tensor. '''
             return {inst_idx: tensor_position for tensor_position, inst_idx in enumerate(inst_idx_list)}
