@@ -176,7 +176,7 @@ def main(params):
     #     model = model_data['model'].to(Constants.device)
 
     if params.use_lm:
-        logger.info("loading pretrained language model")
+        logger.info("loading pretrained LM language model")
         path = params.lm_path
         # lm = torch.load(path).to(Constants.device)
     else:
