@@ -101,7 +101,7 @@ python -u main.py \
 --word_replace ${WORD_REPLACE} \
 --frc_path ${FRC_PATH} \
 --batch_size 128 \
---epoch_size 150000 \
+--epoch_size 1500 \
 --freeze_enc_emb 0 \
 --freeze_dec_emb 0 \
 --pretrain_autoencoder 25000 \
