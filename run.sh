@@ -49,7 +49,8 @@ HEADS=8
 D_K=$[${D_MODEL}/${HEADS}]
 D_V=$[${D_MODEL}/${HEADS}]
 MAX_LEN=120
-BEAM_SIZE=8
+BEAM_SIZE=0
+# beam size should be zero to select the greedy decoding
 
 # =========== Denoising Parameters ===============
 WORD_SHUFFLE=3
