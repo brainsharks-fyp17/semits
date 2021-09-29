@@ -3,7 +3,7 @@ import torch
 
 PAD = 0
 UNK = 100
-SBOS = 101
+SBOS = 99
 CBOS = 101
 EOS = 102
 LABEL_PAD = 3
@@ -24,7 +24,7 @@ vocab_path = './data/google/voca.list'
 # trained_path= './trained_model'
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-print("Using:", device)
+# print("Using:", device)
 # device = torch.device("cuda")
 
 max_oov = 15
