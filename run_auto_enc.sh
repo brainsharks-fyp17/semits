@@ -108,7 +108,7 @@ python -u main.py \
 --lr ${LR} \
 --use_multi_process 1 \
 --otf_num_processes 2 \
---otf_sync_params_every 300 \
+--otf_sync_params_every 30 \
 --us_pretrain_embedding 1 \
 --embedding_path ${EMBEDDING_PATH} \
 --stopping_criterion 'sari' \
@@ -123,10 +123,10 @@ python -u main.py \
 --beam_size ${BEAM_SIZE} \
 --supervised_rate ${SUPERVISED_RATE} \
 --rl_finetune  ${RL_FINETUNE} \
---use_pretrained_model 1 \
+--use_pretrained_model 0 \
 --gamma ${GAMMA} \
 --delta ${DELATA} \
---otf_back_translation 1 \
+--otf_back_translation 0 \
 --otf_autoencoding 1 \
 --use_lm ${RL_FINETUNE} \
 --additive ${ADDITIVE} \
