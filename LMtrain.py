@@ -165,4 +165,6 @@ if __name__ == '__main__':
             print(loss_step.item())
         if i % params.save_every == 0:
             torch.save(lm, open(params.output_file, "wb"))
+            print("Saving model to ", params.output_file)
     torch.save(lm, open(params.output_file, "wb"))
+    print("Saving model to ", params.output_file)
