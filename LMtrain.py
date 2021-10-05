@@ -143,13 +143,18 @@ class params:
     steps = 2005
     lr = 0.0001
     hidden_size = 2
+    output_file = "LM.pkl"
+    save_every = 1000
 
     class args:
         embedding_path = "resource/embedding.pkl"
 
 
 if __name__ == '__main__':
-    lm = LanguageModel(params, emb_size=512, hidden_size=params.hidden_size, ouput_size=30995).to(Constants.device)
+    if os.path.isfile(params.output_file):
+        lm = torch.load(params.output_file).to(Constants.device)
+    else:
+        lm = LanguageModel(params, emb_size=512, hidden_size=params.hidden_size, ouput_size=30995).to(Constants.device)
     lm_optimizer = torch.optim.Adam(lm.parameters(), lr=params.lr, betas=(0.5, 0.999))
     word2index, index2word = load_vocab(params)
     # print(word2index)
@@ -158,4 +163,6 @@ if __name__ == '__main__':
         loss_step = lm_step(lm=lm, lm_optimizer=lm_optimizer, iterator=iterator)
         if i % 10 == 0:
             print(loss_step.item())
-    torch.save(lm, open("LM.pkl", "wb"))
+        if i % params.save_every == 0:
+            torch.save(lm, open(params.output_file, "wb"))
+    torch.save(lm, open(params.output_file, "wb"))
