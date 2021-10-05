@@ -98,7 +98,6 @@ def load_mono_data(params, vocab):
             shuffle=True,
             collate_fn=collate_fn,
         )
-        logger.info("Loaded mono data:", lm_loader)
         return lm_loader
 
 
