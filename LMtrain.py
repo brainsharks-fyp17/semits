@@ -139,7 +139,7 @@ class params:
     batch_size = 50
     len_max_seq = 120
     vocab_path = "data/vocab.list"
-    steps = 20000
+    steps = 300000
     lr = 0.0001
     hidden_size = 2
     output_file = "LM.pkl"
