@@ -121,8 +121,8 @@ def lm_step(lm, lm_optimizer, iterator):
     batch = get_batch(iterator)
     # print(batch)
     input_seq, input_pos = map(lambda x: x.to(Constants.device), batch)
-    tgt_seq = input_seq[:, 1:].contiguous()
-    input_seq = input_seq[:, :-1].contiguous()
+    tgt_seq = input_seq[:, 1:].contiguous().to(Constants.device)
+    input_seq = input_seq[:, :-1].contiguous().to(Constants.device)
 
     loss = lm(input_seq, tgt_seq)
     # print(loss)
@@ -149,13 +149,13 @@ class params:
 
 
 if __name__ == '__main__':
-    lm = LanguageModel(params, emb_size=512, hidden_size=params.hidden_size, ouput_size=30995)
+    lm = LanguageModel(params, emb_size=512, hidden_size=params.hidden_size, ouput_size=30995).to(Constants.device)
     lm_optimizer = torch.optim.Adam(lm.parameters(), lr=params.lr, betas=(0.5, 0.999))
     word2index, index2word = load_vocab(params)
     # print(word2index)
     iterator = get_iterator(load_mono_data(params, word2index))
     for i in range(params.steps):
         loss_step = lm_step(lm=lm, lm_optimizer=lm_optimizer, iterator=iterator)
-        if i % 100 == 0:
-            logger.info(loss_step.item())
+        if i % 10 == 0:
+            print(loss_step.item())
     torch.save(lm, open("LM.pkl", "wb"))
