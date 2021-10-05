@@ -137,7 +137,7 @@ class params:
     data_path = "data/nonpara/comp_train.txt"
     embedding_path = "resource/embedding.pkl"
     stoplist_path = "resource/stop.list"
-    batch_size = 5
+    batch_size = 50
     len_max_seq = 120
     vocab_path = "data/vocab.list"
     steps = 20000
