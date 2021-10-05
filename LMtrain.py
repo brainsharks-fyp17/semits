@@ -140,7 +140,7 @@ class params:
     batch_size = 5
     len_max_seq = 120
     vocab_path = "data/vocab.list"
-    steps = 2005
+    steps = 20000
     lr = 0.0001
     hidden_size = 2
     output_file = "LM.pkl"
@@ -161,7 +161,7 @@ if __name__ == '__main__':
     iterator = get_iterator(load_mono_data(params, word2index))
     for i in range(params.steps):
         loss_step = lm_step(lm=lm, lm_optimizer=lm_optimizer, iterator=iterator)
-        if i % 10 == 0:
+        if i % 100 == 0:
             print(loss_step.item())
         if i % params.save_every == 0:
             torch.save(lm, open(params.output_file, "wb"))
