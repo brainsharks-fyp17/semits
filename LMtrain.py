@@ -134,7 +134,7 @@ def lm_step(lm, lm_optimizer, iterator):
 
 class params:
     us_pretrain_embedding = True
-    data_path = "data/nonpara/comp_dev.txt"
+    data_path = "data/nonpara/comp_train.txt"
     embedding_path = "resource/embedding.pkl"
     stoplist_path = "resource/stop.list"
     batch_size = 5
