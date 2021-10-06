@@ -11,7 +11,7 @@ from metrics.FKGL import fkgl_score
 from metrics.ARI import ari_score
 from metrics.SARI import SARIsent
 import numpy as np
-from nltk.corpus import cmudict
+# from nltk.corpus import cmudict
 from torch.distributions import Categorical
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from nltk.translate.bleu_score import corpus_bleu
@@ -66,7 +66,7 @@ class Trainer(MultiprocessingEventLoop):
         self.decrease_counts_max = 30
         self.epoch = 0
         self.index2word = data['index2word']
-        self.cmu_dict = cmudict.dict()
+        # self.cmu_dict = cmudict.dict()
         self.rewards_simp = []
         self.rewards_comp = []
         self.sts_model = STS_model(params)
