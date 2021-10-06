@@ -59,7 +59,7 @@ WORD_DROPOUT=0.6
 DROP_TYPE='Two'
 WORD_REPLACE=0.9
 ADDITIVE=1
-RL_FINETUNE=0
+RL_FINETUNE=1
 LR=0.00005
 GAMMA=0.9
 DELATA=0.5
@@ -101,7 +101,7 @@ python -u main.py \
 --word_dropout ${WORD_DROPOUT} \
 --word_replace ${WORD_REPLACE} \
 --frc_path ${FRC_PATH} \
---batch_size 128 \
+--batch_size 4 \
 --epoch_size 1200 \
 --freeze_enc_emb 0 \
 --freeze_dec_emb 0 \
