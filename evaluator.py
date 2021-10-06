@@ -4,6 +4,7 @@ from torch.nn import functional as F
 import codecs
 import model.Constants as Constants
 from metrics.FKGL import fkgl_score
+from metrics.ARI import ari_score
 from metrics.STAR import SARIsent
 # from metrics.FKGL import fkgl_score
 import metrics.SARI as sari
@@ -79,11 +80,11 @@ class Evaluator(object):
 
     def get_reward(self, input_seq, policy_gen, tgt_seq, type='simp'):
 
-        def normal_fkgl(score, type):
+        def normal_ari(score, type):
             if type == 'simp':
-                min_score, max_score = 3, 15
+                min_score, max_score = 2, 10
             else:
-                min_score, max_score = 15, 30
+                min_score, max_score = 10, 15
 
             if score <= min_score:
                 return 0
@@ -92,18 +93,20 @@ class Evaluator(object):
             else:
                 return (score - min_score) / (max_score - min_score)
 
-        fkgl = fkgl_score(policy_gen, self.cmu_dict)
-        fkgl = normal_fkgl(fkgl, type)
+        # fkgl = fkgl_score(policy_gen, self.cmu_dict)
+        # fkgl = normal_fkgl(fkgl, type)
+        ari = ari_score(policy_gen)
+        ari = normal_ari(ari, type)
 
         # sari, *_ = SARIsent(input_sent, policy_sent, [tgt_sent])
         reward = 0
         if type == 'simp':
             meteor = single_meteor_score(reference=input_seq, hypothesis=policy_gen)
-            reward = self.params.delta * meteor + (1 - self.params.delta) * (1 - fkgl)
+            reward = self.params.delta * meteor + (1 - self.params.delta) * (1 - ari)
             # reward = 0.3 * meteor - 0.3 * fkgl * 0.4 * sari
         elif type == 'comp':
             meteor = single_meteor_score(reference=policy_gen, hypothesis=input_seq)
-            reward = self.params.delta * meteor + (1 - self.params.delta) * fkgl
+            reward = self.params.delta * meteor + (1 - self.params.delta) * ari
             # reward = 0.3 * meteor + 0.3 * fkgl * 0.4 * sari
 
         return reward

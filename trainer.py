@@ -8,6 +8,7 @@ import os
 from logging import getLogger
 from nltk.translate.meteor_score import single_meteor_score
 from metrics.FKGL import fkgl_score
+from metrics.ARI import ari_score
 from metrics.SARI import SARIsent
 import numpy as np
 from nltk.corpus import cmudict
@@ -216,11 +217,11 @@ class Trainer(MultiprocessingEventLoop):
 
     def get_reward(self, input_seq, policy_gen, tgt_seq, type='simp'):
 
-        def normal_fkgl(score, type):
+        def normal_ari(score, type):
             if type == 'simp':
-                min_score, max_score = 3, 15
+                min_score, max_score = 2, 10
             else:
-                min_score, max_score = 15, 30
+                min_score, max_score = 10, 15
 
             if score <= min_score:
                 return 0
@@ -229,7 +230,8 @@ class Trainer(MultiprocessingEventLoop):
             else:
                 return (score - min_score) / (max_score - min_score)
 
-        fkgl_rewards = []
+        # fkgl_rewards = []
+        ari_rewards = []
         embeddings = []
         if type == 'simp':
             lm_rewards = self.lm.get_ppl_reward(policy_gen)
@@ -254,9 +256,13 @@ class Trainer(MultiprocessingEventLoop):
             input_sent, input_align = merge_subword(next_input_seq)
             policy_sent, policy_align = merge_subword(next_policy_gen)
 
-            fkgl = fkgl_score(policy_sent, self.cmu_dict)
-            fkgl = normal_fkgl(fkgl, type)
-            fkgl_rewards.append(fkgl)
+            # fkgl = fkgl_score(policy_sent, self.cmu_dict)
+            # fkgl = normal_fkgl(fkgl, type)
+            # fkgl_rewards.append(fkgl)
+            ari = ari_score(policy_sent)
+            ari = normal_ari(ari, type)
+            ari_rewards.append(ari)
+
 
             emb_input = self.sts_model.get_embedding(next_input_idx, input_sent, input_align)
             emb_policy = self.sts_model.get_embedding(next_policy_idx, policy_sent, policy_align)
@@ -264,16 +270,18 @@ class Trainer(MultiprocessingEventLoop):
             embeddings.append(emb_input)
             embeddings.append(emb_policy)
 
-        fkgl_rewards = np.array(fkgl_rewards)
+        # fkgl_rewards = np.array(fkgl_rewards)
+        ari_rewards = np.array(ari_rewards)
         if type == 'simp':
-            fkgl_rewards = 1 - fkgl_rewards
+            # fkgl_rewards = 1 - fkgl_rewards
+            ari_rewards = 1 - ari_rewards
 
         sts_rewards = self.sts_model.get_reward(np.array(embeddings))
 
         if type == 'simp':
-            rewards = 3 / (1 / (fkgl_rewards + 1e-10) + 1 / (sts_rewards + 1e-10) + 1 / (lm_rewards + 1e-10))
+            rewards = 3 / (1 / (ari_rewards + 1e-10) + 1 / (sts_rewards + 1e-10) + 1 / (lm_rewards + 1e-10))
         else:
-            rewards = 2 / (1 / (fkgl_rewards + 1e-10) + 1 / (sts_rewards + 1e-10))
+            rewards = 2 / (1 / (ari_rewards + 1e-10) + 1 / (sts_rewards + 1e-10))
 
         return rewards
 
