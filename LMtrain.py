@@ -142,7 +142,7 @@ class params:
     steps = 300000
     lr = 0.0001
     hidden_size = 2
-    output_file = "LM.pkl"
+    output_file = "lang.pkl"
     save_every = 1000
 
     class args:
