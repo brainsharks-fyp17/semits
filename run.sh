@@ -101,7 +101,7 @@ python -u main.py \
 --word_dropout ${WORD_DROPOUT} \
 --word_replace ${WORD_REPLACE} \
 --frc_path ${FRC_PATH} \
---batch_size 32 \
+--batch_size 16 \
 --epoch_size 1200 \
 --freeze_enc_emb 0 \
 --freeze_dec_emb 0 \
