@@ -180,6 +180,7 @@ def main(params):
         path = params.lm_path
         lm = torch.load(path).to(Constants.device)
     else:
+        logger.info("LM model not available")
         pass
     # 512,30995,2
     # lm = LanguageModel(params, emb_size=512, hidden_size=2, ouput_size=30995)
