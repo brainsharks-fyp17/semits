@@ -1,4 +1,5 @@
 /.idea
+.idea
 dataset/comp2simp.pkl
 dataset/simp2comp.pkl
 data/SimplePPDB
@@ -9,7 +10,7 @@ data/nonpara/simp_train.txt
 data/nonpara/comp_train.txt
 resource/denoise/comp_rules.txt
 resource/denoise/simp_rules.txt
-
+data/parallel/si-cc
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
