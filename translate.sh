@@ -20,7 +20,7 @@ COMP_DEV_PATH="${MONO_DIR}/comp_dev.txt"
 
 PARA_DIR="${DATA_DIR}/parallel"
 DEV_DATASET="si-cc"
-PARA_DEV_PATH="${PARA_DIR}/${DEV_DATASET}/dev.txt"
+PARA_DEV_PATH="${PARA_DIR}/${DEV_DATASET}/newsela-eval.txt"
 PARA_TEST_PATH="${PARA_DIR}/${DEV_DATASET}/test.txt"
 
 EMBEDDING_PATH="${DATA_DIR}/embedding.pkl"
