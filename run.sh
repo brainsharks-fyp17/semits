@@ -59,7 +59,7 @@ WORD_DROPOUT=0.6
 DROP_TYPE='Two'
 WORD_REPLACE=0.9
 ADDITIVE=1
-RL_FINETUNE=0
+RL_FINETUNE=1
 LR=0.00005
 GAMMA=0.9
 DELATA=0.5
@@ -105,7 +105,7 @@ python -u main.py \
 --epoch_size 1200 \
 --freeze_enc_emb 0 \
 --freeze_dec_emb 0 \
---pretrain_autoencoder 0 \
+--pretrain_autoencoder 1200 \
 --lr ${LR} \
 --use_multi_process 1 \
 --otf_num_processes 2 \
