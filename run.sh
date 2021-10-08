@@ -128,6 +128,6 @@ python -u main.py \
 --gamma ${GAMMA} \
 --delta ${DELATA} \
 --otf_back_translation 1 \
---otf_autoencoding 0 \
+--otf_autoencoding 1 \
 --use_lm ${RL_FINETUNE} \
 --additive ${ADDITIVE} \
