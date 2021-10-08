@@ -102,10 +102,10 @@ python -u main.py \
 --word_replace ${WORD_REPLACE} \
 --frc_path ${FRC_PATH} \
 --batch_size 16 \
---epoch_size 1200 \
+--epoch_size 50 \
 --freeze_enc_emb 0 \
 --freeze_dec_emb 0 \
---pretrain_autoencoder 1200 \
+--pretrain_autoencoder 200000 \
 --lr ${LR} \
 --use_multi_process 1 \
 --otf_num_processes 2 \
