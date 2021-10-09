@@ -25,7 +25,7 @@ PARA_TEST_PATH="${PARA_DIR}/${DEV_DATASET}/test.txt"
 
 EMBEDDING_PATH="${DATA_DIR}/embedding.pkl"
 
-SUPERVISED_RATE=0
+SUPERVISED_RATE=1
 
 COMP_FREQUENT_LIST="${RESOURCE_DIR}/denoise/frequent_comp.list"
 SIMP_FREQUENT_LIST="${RESOURCE_DIR}/denoise/frequent_simp.list"
@@ -49,7 +49,7 @@ D_K=$[${D_MODEL}/${HEADS}]
 D_V=$[${D_MODEL}/${HEADS}]
 MAX_LEN=120
 BEAM_SIZE=8
-RL_FINETUNE=0
+RL_FINETUNE=1
 
 # =========== Denoising Parameters ===============
 WORD_SHUFFLE=3
