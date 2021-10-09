@@ -48,7 +48,7 @@ HEADS=8
 D_K=$[${D_MODEL}/${HEADS}]
 D_V=$[${D_MODEL}/${HEADS}]
 MAX_LEN=120
-BEAM_SIZE=8
+BEAM_SIZE=0
 RL_FINETUNE=1
 
 # =========== Denoising Parameters ===============
