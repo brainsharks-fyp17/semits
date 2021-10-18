@@ -205,6 +205,7 @@ def main(params):
             trainer.enc_dec_step('comp', 'comp')
             if i % 5000 == 0:
                 simp_loss, comp_loss = trainer.print_stats(pretrain=True)
+                trainer.save_model(params.name)
                 # score = evaluator.eval_all(use_pointer=False)
 
         logger.info("saving model pid: "+str(os.getpid()))
