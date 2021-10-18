@@ -17,7 +17,7 @@ SIMP_TRAIN_PATH="${MONO_DIR}/simp_train.txt"
 SIMP_DEV_PATH="${MONO_DIR}/simp_dev.txt"
 COMP_TRAIN_PATH="${MONO_DIR}/comp_train.txt"
 COMP_DEV_PATH="${MONO_DIR}/comp_dev.txt"
-SUPERVISED_RATE=1
+SUPERVISED_RATE=0
 
 PARA_DIR="${DATA_DIR}/parallel"
 DEV_DATASET="si-cc"
