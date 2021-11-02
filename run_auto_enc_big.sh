@@ -123,7 +123,7 @@ python -u main.py \
 --beam_size ${BEAM_SIZE} \
 --supervised_rate ${SUPERVISED_RATE} \
 --rl_finetune  ${RL_FINETUNE} \
---use_pretrained_model 0 \
+--use_pretrained_model 1 \
 --gamma ${GAMMA} \
 --delta ${DELATA} \
 --otf_back_translation 0 \
