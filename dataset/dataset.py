@@ -163,8 +163,8 @@ class MonoLingualData(data.Dataset):
         if self.train_mode == 'autoencoder':
             if item in self.ppdb_rules:
                 rules = self.ppdb_rules[item]
-            # else:
-            # corupt_seq = corupt_seq.split()
+            else:
+                corupt_seq = corupt_seq.split()
             if self.params.shuffle_mode == 'unigram':
                 word_ids = np.arange(len(corupt_seq), dtype=int)
             elif self.params.shuffle_mode == 'bigram':
