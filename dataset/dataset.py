@@ -89,30 +89,17 @@ class MonoLingualData(data.Dataset):
         return ret_seq
 
     def word_replace(self, seq, rules):
-        def get_uni_bi_grams(seq_in):
-            seq_in = seq_in.strip()
-            uni = seq_in.split()
-            bi = []
-            for i in range(len(uni)-1):
-                bi.append(uni[i]+" "+uni[i+1])
-            uni.extend(bi)
-            return uni
-
-        uni_bi_grams = get_uni_bi_grams(seq)
-        for gram in uni_bi_grams:
-            if gram in rules:
-                if np.random.rand() <= self.params.word_replace and gram not in self.stop_set:
-                    try:
-                        seq = re.sub(gram, random.choice(rules[gram]), seq, count=1)
-                    except Exception as e:
-                        print("PPDB substitution error occurred, the key is ", gram)
-
-        # for key, value in rules.items():
-        #     if key in seq and np.random.rand() <= self.params.word_replace and key not in self.stop_set:
-        #         try:
-        #             seq = re.sub(key, value, seq, count=1)
-        #         except Exception as e:
-        #             print("PPDB substitution error occurred, the key is ", key, value)
+        for key, values in rules.items():
+            if key in seq and np.random.rand() <= self.params.word_replace and key not in self.stop_set:
+                index = np.random.randint(0, len(values))
+                alternative_words = values[index]
+                if alternative_words in ['.', ',', ';', '\'', '`', '*', '?', '\\', '\\\\']:
+                    continue
+                try:
+                    seq = re.sub(key, alternative_words, seq, count=1)
+                except:
+                    # print("error occured, the key is ", key, alternative_words)
+                    pass
 
         return seq.split()
 
@@ -174,9 +161,8 @@ class MonoLingualData(data.Dataset):
             mono_seq = [Constants.CBOS] + mono_seq + [Constants.EOS]
 
         if self.train_mode == 'autoencoder':
-            # if item in self.ppdb_rules:
-            #     rules = self.ppdb_rules[item]
-            corupt_seq = self.word_replace(corupt_seq, self.ppdb_rules)
+            if item in self.ppdb_rules:
+                rules = self.ppdb_rules[item]
             # else:
             # corupt_seq = corupt_seq.split()
             if self.params.shuffle_mode == 'unigram':

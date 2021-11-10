@@ -90,19 +90,9 @@ def load_frequent_list(path):
 
 
 def load_ppdb_rules(path):
-    # rule_files = codecs.open(path, mode='rb')
-    # ppdb_rules = pickle.load(rule_files)
-    rule_file = codecs.open(path, "r").readlines()
-    ppdb_rules = dict()
-    for line in rule_file:
-        if "," in line and "-" not in line:
-            data = line.split(",")
-            key = data[0].strip()
-            val = data[1].strip()
-            if key in ppdb_rules:
-                ppdb_rules[key].append(val)
-            else:
-                ppdb_rules[key] = [val]
+    rule_files = codecs.open(path, mode='rb')
+    ppdb_rules = pickle.load(rule_files)
+
     return ppdb_rules
 
 
