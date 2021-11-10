@@ -19,18 +19,18 @@ COMP_TRAIN_PATH="${MONO_DIR}/comp_train.txt"
 COMP_DEV_PATH="${MONO_DIR}/comp_dev.txt"
 
 PARA_DIR="${DATA_DIR}/parallel"
-DEV_DATASET="si-cc"
-PARA_DEV_PATH="${PARA_DIR}/${DEV_DATASET}/newsela-eval.txt"
+DEV_DATASET="newsela"
+PARA_DEV_PATH="${PARA_DIR}/${DEV_DATASET}/dev.txt"
 PARA_TEST_PATH="${PARA_DIR}/${DEV_DATASET}/test.txt"
 
 EMBEDDING_PATH="${DATA_DIR}/embedding.pkl"
 
-SUPERVISED_RATE=1
+SUPERVISED_RATE=0
 
 COMP_FREQUENT_LIST="${RESOURCE_DIR}/denoise/frequent_comp.list"
 SIMP_FREQUENT_LIST="${RESOURCE_DIR}/denoise/frequent_simp.list"
-COMP_PPDB_RULES="${RESOURCE_DIR}/denoise/comp_rules.txt"
-SIMP_PPDB_RULES="${RESOURCE_DIR}/denoise/simp_rules.txt"
+COMP_PPDB_RULES="${RESOURCE_DIR}/denoise/comp_rules.pkl"
+SIMP_PPDB_RULES="${RESOURCE_DIR}/denoise/simp_rules.pkl"
 STOP_LIST="${RESOURCE_DIR}/stop.list"
 
 VOCAB_PATH="${ROOT}/data/vocab.list"
@@ -48,8 +48,8 @@ HEADS=8
 D_K=$[${D_MODEL}/${HEADS}]
 D_V=$[${D_MODEL}/${HEADS}]
 MAX_LEN=120
-BEAM_SIZE=0
-RL_FINETUNE=1
+BEAM_SIZE=8
+RL_FINETUNE=0
 
 # =========== Denoising Parameters ===============
 WORD_SHUFFLE=3

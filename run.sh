@@ -20,19 +20,19 @@ COMP_DEV_PATH="${MONO_DIR}/comp_dev.txt"
 SUPERVISED_RATE=0
 
 PARA_DIR="${DATA_DIR}/parallel"
-DEV_DATASET="si-cc"
-PARA_DEV_PATH="${PARA_DIR}/${DEV_DATASET}/newsela-eval.txt"
+DEV_DATASET="newsela"
+PARA_DEV_PATH="${PARA_DIR}/${DEV_DATASET}/dev.txt"
 PARA_TEST_PATH="${PARA_DIR}/${DEV_DATASET}/test.txt"
-PARA_TRAIN_PATH="${PARA_DIR}/${DEV_DATASET}/newsela-train.txt"
-FRC_PATH="${RESOURCE_DIR}/si-cc-min200.txt"
+PARA_TRAIN_PATH="${PARA_DIR}/${DEV_DATASET}/train${SUPERVISED_RATE}.txt"
+FRC_PATH="${RESOURCE_DIR}/enwiki_vocab_min200.txt"
 
 EMBEDDING_PATH="${RESOURCE_DIR}/embedding.pkl"
 LM_PATH="${RESOURCE_DIR}/lang.pkl"
 
 COMP_FREQUENT_LIST="${RESOURCE_DIR}/denoise/frequent_comp.list"
 SIMP_FREQUENT_LIST="${RESOURCE_DIR}/denoise/frequent_simp.list"
-COMP_PPDB_RULES="${RESOURCE_DIR}/denoise/comp_rules.txt"
-SIMP_PPDB_RULES="${RESOURCE_DIR}/denoise/simp_rules.txt"
+COMP_PPDB_RULES="${RESOURCE_DIR}/denoise/comp_rules.pkl"
+SIMP_PPDB_RULES="${RESOURCE_DIR}/denoise/simp_rules.pkl"
 STOP_LIST="${RESOURCE_DIR}/stop.list"
 
 VOCAB_PATH="${DATA_DIR}/vocab.list"
@@ -50,7 +50,6 @@ D_K=$[${D_MODEL}/${HEADS}]
 D_V=$[${D_MODEL}/${HEADS}]
 MAX_LEN=120
 BEAM_SIZE=0
-# beam size should be zero to select the greedy decoding
 
 # =========== Denoising Parameters ===============
 WORD_SHUFFLE=3
@@ -102,14 +101,14 @@ python -u main.py \
 --word_replace ${WORD_REPLACE} \
 --frc_path ${FRC_PATH} \
 --batch_size 16 \
---epoch_size 1200 \
+--epoch_size 150000 \
 --freeze_enc_emb 0 \
 --freeze_dec_emb 0 \
---pretrain_autoencoder 0 \
+--pretrain_autoencoder 200000 \
 --lr ${LR} \
 --use_multi_process 1 \
 --otf_num_processes 2 \
---otf_sync_params_every 30 \
+--otf_sync_params_every 300 \
 --us_pretrain_embedding 1 \
 --embedding_path ${EMBEDDING_PATH} \
 --stopping_criterion 'sari' \
@@ -124,7 +123,7 @@ python -u main.py \
 --beam_size ${BEAM_SIZE} \
 --supervised_rate ${SUPERVISED_RATE} \
 --rl_finetune  ${RL_FINETUNE} \
---use_pretrained_model 1 \
+--use_pretrained_model 0 \
 --gamma ${GAMMA} \
 --delta ${DELATA} \
 --otf_back_translation 1 \

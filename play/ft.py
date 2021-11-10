@@ -2,9 +2,9 @@ from easse.sari import corpus_sari, get_corpus_sari_operation_scores
 from easse.bleu import corpus_bleu
 from easse.cli import report
 
-base = "/home/rumesh/Desktop/semits2/5/new2/"
+base = "/home/rumesh/Desktop/semits2/6/"
 original =base+"comp.txt"
-sys_out = base + "si-cc_SUPERVISED_RATE_1_RL_FINETUNE_0"
+sys_out = base + "si-cc_SUPERVISED_RATE_0_RL_FINETUNE_1"
 refr = base+"ref.txt"
 original = open(original).readlines()
 syst = open(sys_out).readlines()
