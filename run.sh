@@ -126,7 +126,7 @@ python -u main.py \
 --use_pretrained_model 0 \
 --gamma ${GAMMA} \
 --delta ${DELATA} \
---otf_back_translation 1 \
+--otf_back_translation 0 \
 --otf_autoencoding 1 \
 --use_lm ${RL_FINETUNE} \
 --additive ${ADDITIVE} \
