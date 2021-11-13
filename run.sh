@@ -104,7 +104,7 @@ python -u main.py \
 --epoch_size 150000 \
 --freeze_enc_emb 0 \
 --freeze_dec_emb 0 \
---pretrain_autoencoder 200000 \
+--pretrain_autoencoder 0 \
 --lr ${LR} \
 --use_multi_process 1 \
 --otf_num_processes 2 \
