@@ -2,7 +2,7 @@ ROOT=$(pwd)
 DATA_DIR="${ROOT}/data"
 
 PARA_DIR="${DATA_DIR}/parallel"
-DEV_DATASET="si-cc"
+DEV_DATASET="newsela"
 PARA_DEV_PATH="${PARA_DIR}/${DEV_DATASET}/newsela-eval.txt"
 PARA_TEST_PATH="${PARA_DIR}/${DEV_DATASET}/test.txt"
 SUPERVISED_RATE=0
@@ -13,7 +13,7 @@ NAME="${DEV_DATASET}_SUPERVISED_RATE_${SUPERVISED_RATE}_RL_FINETUNE_${RL_FINETUN
 OUTPUT_NAME="${TEST_OUTPUT_PARH}/${NAME}"
 
 
-if [ ${DEV_DATASET} = "si-cc" ]
+if [ ${DEV_DATASET} = "newsela" ]
 then
 	python extract.py ${PARA_TEST_PATH} ${TEST_OUTPUT_PARH}
 	echo "Extraction done"
